@@ -17,6 +17,6 @@ If you encounter a bug, fell free to report it on GitHub or on resource discussi
 #### Teleport
 Small script wich allow you create "teleport channels". Every user entered certain channel will be moved to another defined channel.
 
-You may use this teleport channels like a table of contents at the beginning of your channel list. This will work like a links to different sections of your server.
+You may use this teleport channels like a table of contents at the beginning of your channel list. This will work like a links to certain sections of your server.
 
 Or you may use it like a gateways to restricted areas - when your bot is online then gateways allow access some channels. But when it off then access will closed too.
