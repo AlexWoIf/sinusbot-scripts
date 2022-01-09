@@ -1,3 +1,4 @@
+// @ts-check
 /* Wargaming public API authorization manager
 Authomatically create clan channel for any clan member and give him one of three channel groups - Boss, Officer or just member
 Some vars are hardcoded for now. They will be partially moved to config and partially will be recoded to request values from TS engine.
@@ -22,6 +23,12 @@ registerPlugin({
 	    title: 'Channel name format (placeholders: &t-clan TAG, &n-clan name)',
 	    type: 'string',
 		default: '[&t]&n'
+	}, {
+	    name: 'channelDesc',
+	    indent: 2,
+	    title: 'Channel description format (placeholders: &t-clan TAG, &n-clan name, &e-64x64 emblem)',
+	    type: 'multiline',
+		default: '[center][size=x-large][COLOR=#ff0000][&t]&n[/COLOR][/size][/center][center]&e[/center]'
 	}, {
 	    name: 'parentchannel',
 	    indent: 2,
@@ -222,10 +229,10 @@ function setPermission(wgid, uid) {
 					}
 					// Create channel if not exist
 					if ( !Boolean(channel_id) ) {
-						// Replace spaces to special characters
-//						let channel_name = encodeURIComponent("["+clan.tag+']'+clan.name);
+						// Replace placeholders and URLencode channel name and channel description
 						let channel_name = encodeURIComponent(config.channelName.replace('&t',clan.tag).replace('&n',clan.name));
-						let channel_desc = encodeURIComponent("[img]"+clan.emblems.x64.wot+"[/img]");
+//						let channel_desc = encodeURIComponent("[img]"+clan.emblems.x64.wot+"[/img]");
+						let channel_desc = encodeURIComponent(config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name));
 						engine.log(channel_name);
 						engine.log(channel_desc);
 						http.simpleRequest({
