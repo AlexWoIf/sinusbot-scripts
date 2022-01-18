@@ -76,7 +76,7 @@ function (sinusbot, config) {
 							return;
 						}
 					}
-					var tgURL = "https://api.telegram.org/bot"
+					var tgURL = "https://api.telegram.org/bot" +
 						    encodeURIComponent(config.apiTelegramToken) +
 						    "/sendMessage?chat_id=" +
 						    encodeURIComponent(config.telegramChatID) + "&text=" +
