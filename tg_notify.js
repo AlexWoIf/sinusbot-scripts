@@ -84,10 +84,20 @@ function (sinusbot, config) {
 					http.simpleRequest({
 						url: tgURL,
 						timeout: 60000,
-					});
-					engine.log('TelegramNotification send...')
-					ev.client.poke( config.incomingUserMessage.replace("&u", ev.client.name()) );
-					return;
+						}, function (error, response) {
+							if (error) {
+								engine.log("Error: " + error);
+								return;
+							}
+							if (response.statusCode != 200) {
+								engine.log("HTTP Error: " + response.status);
+								return;
+							}
+							// success!
+							engine.log('TelegramNotification send...')
+							ev.client.poke( config.incomingUserMessage.replace("&u", ev.client.name()) );
+							return;
+					);
 				}
 			}
 		}
