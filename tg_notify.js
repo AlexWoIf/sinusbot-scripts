@@ -81,6 +81,7 @@ function (sinusbot, config) {
 						    "/sendMessage?chat_id=" +
 						    encodeURIComponent(config.telegramChatID) + "&text=" +
 						    encodeURIComponent(config.telegrammTextMessage.replace("&u", ev.client.name()).replace("&c", userchannel.name()));
+					engine.log(tgURL);
 					http.simpleRequest({
 						url: tgURL,
 						timeout: 60000,
