@@ -189,7 +189,10 @@ function setClanRank( uid, clanchannel, role) {
 			}
 			// success!
 			engine.log("Response: " + response.data.toString());
-			engine.log(backend.getClientByUID(uid).getChannels()[0]);
+			let clnt = backend.getClientByUID(uid);
+			if ( clnt.getChannels()[0] = authchannel ) {
+				clnt.moveTo(clanchannel);
+			}
 		});
 	});
 }
