@@ -210,7 +210,7 @@ function setPermission(wgid, uid) {
 			return;
 		}
 		// success!
-		engine.log(response.data);
+		engine.log(response);
 		let mydata = JSON.parse(response.data);
 		if ( Boolean(mydata.data[wgid])) {
 			let clan = mydata.data[wgid].clan;
