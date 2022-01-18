@@ -1,4 +1,3 @@
-// @ts-check
 /* Wargaming public API authorization manager
 Authomatically create clan channel for any clan member and give him one of three channel groups - Boss, Officer or just member
 Some vars are hardcoded for now. They will be partially moved to config and partially will be recoded to request values from TS engine.
@@ -10,7 +9,7 @@ registerPlugin({
     author: 'AlexWolf <alexwolf@inbox.ru>',
     requiredModules: ['http', 'db', 'crypto'],
     vars: [{
-	    name: 'authchannel',
+		name: 'authchannel',
 	    indent: 0,
 	    title: 'Channel for WG auhorization',
 	    type: 'channel'
@@ -196,6 +195,7 @@ function setClanRank( uid, clanchannel, role) {
 
 function setPermission(wgid, uid) {
 	let clanIDurl = wgAPIurl+'clans/accountinfo/?application_id='+config.WGapiID+'&account_id='+wgid+'&fields=clan%2C+role';
+	engine.log(clanIDurl);
 	http.simpleRequest({
 		'method': 'GET',
 		'url': clanIDurl,
@@ -210,6 +210,7 @@ function setPermission(wgid, uid) {
 			return;
 		}
 		// success!
+		engine.log(response.data);
 		let mydata = JSON.parse(response.data);
 		if ( Boolean(mydata.data[wgid])) {
 			let clan = mydata.data[wgid].clan;

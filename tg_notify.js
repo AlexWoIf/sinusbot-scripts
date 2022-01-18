@@ -54,9 +54,10 @@ registerPlugin({
 
 function (sinusbot, config) {
     
-    var event = require('event');
-    var backend = require('backend');
+    const event = require('event');
+    const backend = require('backend');
     const engine = require('engine');
+	const http = require('http');
     
     event.on('clientMove', function (ev) {
 		if (ev.client.isSelf()) {
