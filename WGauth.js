@@ -179,16 +179,17 @@ function setClanRank( uid, clanchannel, role) {
 			'timeout': 6000,
 			'headers': {'x-api-key': config.apikeyWebQuery }
 		}, function (error, response) {
-		if (error) {
-			engine.log("Error: " + error);
-			return;
-		}
-		if (response.statusCode != 200) {
-			engine.log("HTTP Error: " + response.status);
-			return;
-		}
-		// success!
-		engine.log("Response: " + response.data.toString());
+			if (error) {
+				engine.log("Error: " + error);
+				return;
+			}
+			if (response.statusCode != 200) {
+				engine.log("HTTP Error: " + response.status);
+				return;
+			}
+			// success!
+			engine.log("Response: " + response.data.toString());
+			engine.log(engine.getClientByUID(uid).getChannels());
 		});
 	});
 }
@@ -261,11 +262,11 @@ function setPermission(wgid, uid) {
 							}, function (error, response) {
 								if (error) {
 									engine.log("Error: " + error);
-								return;
+									return;
 								}
 								if (response.statusCode != 200) {
-								engine.log("HTTP Error: " + response.status);
-								return;
+									engine.log("HTTP Error: " + response.status);
+									return;
 								}
 								// success! Store new clan channel in DB
 								engine.log("Response: " + response.data.toString());
