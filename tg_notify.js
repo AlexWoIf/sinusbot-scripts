@@ -97,6 +97,7 @@ function (sinusbot, config) {
 							engine.log('TelegramNotification send...')
 							ev.client.poke( config.incomingUserMessage.replace("&u", ev.client.name()) );
 							return;
+						}
 					);
 				}
 			}
