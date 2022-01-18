@@ -76,6 +76,15 @@ function (sinusbot, config) {
 							return;
 						}
 					}
+					var tgURL = "https://api.telegram.org/bot".
+						    + encodeURIComponent(config.apiTelegramToken).
+						    + "/sendMessage?chat_id=".
+						    + encodeURIComponent(config.telegramChatID) + "&text=".
+						    + encodeURIComponent(config.telegrammTextMessage.replace("&u", ev.client.name()).replace("&c", userchannel.name()));
+					http.simpleRequest({
+						url: tgURL,
+						timeout: 60000,
+					});
 					http.simpleRequest({
 						url: "https://api.telegram.org/bot" + encodeURIComponent(config.spTelegramToken) + "/sendMessage?chat_id=" + encodeURIComponent(config.spTelegramID) + "&text=" + encodeURIComponent(text),
 						timeout: 60000,
