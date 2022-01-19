@@ -171,7 +171,7 @@ function setClanRank( uid, clanchannel, role) {
 		}
 		// success!
 		let mydata = JSON.parse(response.data);
-		engine.log("Response: " + mydata.body[0].cldbid);
+		//engine.log("Response: " + mydata.body[0].cldbid);
 		// Set channelgroup 'group' for channel 'channel_id' for client 'client.uid()'
 		http.simpleRequest({
 			'method': 'GET',
@@ -188,10 +188,12 @@ function setClanRank( uid, clanchannel, role) {
 				return;
 			}
 			// success!
-			engine.log("Response: " + response.data.toString());
+			//engine.log("Response: " + response.data.toString());
 			let clnt = backend.getClientByUID(uid);
-			if ( clnt.getChannels()[0] = config.authchannel ) {
-				clnt.moveTo(clanchannel);
+			if (Boolean(clnt)) {
+				if ( clnt.getChannels()[0] = config.authchannel ) {
+					clnt.moveTo(clanchannel);
+				}
 			}
 		});
 	});
@@ -214,7 +216,7 @@ function setPermission(wgid, uid) {
 			return;
 		}
 		// success!
-		engine.log(response);
+		//engine.log(response);
 		let mydata = JSON.parse(response.data);
 		engine.log(mydata);
 		if ( Boolean(mydata.data[wgid])) {
@@ -346,7 +348,7 @@ function setPermission(wgid, uid) {
     event.on('public:WGanswer', ev => {
 	//	engine.log('Received public event from api!'+ev.queryParams().ruid);
 		if (ev.queryParams().status == 'ok') {
-			if( Boolean(ev.queryParams().ruid) && Boolean(ev.queryParams().account_id) && Boolean(ev.queryParams().account_id) ) {
+			if( Boolean(ev.queryParams().ruid) && Boolean(ev.queryParams().account_id) && Boolean(ev.queryParams().nickname) && Boolean(ev.queryParams().access_token) && Boolean(ev.queryParams().expires_at) ) {
 				var dbc = db.connect({ driver: 'mysql', host: config.dbhost, username: config.dbuser, password: config.dbpassword, database: config.dbname }, function(err) {
 					if (err) {
 						engine.log(err);
@@ -378,7 +380,7 @@ function setPermission(wgid, uid) {
 								let mydata = JSON.parse(response.data);
 								engine.log("Response: " + mydata.data[ev.queryParams().account_id].nickname);
 								// Save (identity<->WGid) pair into DB
-								if (dbc) dbc.exec("INSERT INTO wgplayers (uid, wgid) VALUES (?, ?)", uid, ev.queryParams().account_id);
+								if (dbc) dbc.exec("INSERT INTO wgplayers (uid, wgid) VALUES (?, ?, ?, ?, ?)", uid, ev.queryParams().account_id, ev.queryParams().nickname, ev.queryParams().access_token, ev.queryParams().expires_at);
 								// Delete current ruid
 								if (dbc) dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
 								setPermission(ev.queryParams().account_id, uid);
