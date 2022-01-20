@@ -17,6 +17,7 @@ jobs:
         with:
           username: ${{ secrets.REMOTE_USER }}
           host: ${{ secrets.REMOTE_HOST }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+ #         key: ${{ secrets.SSH_PRIVATE_KEY }}
+          password: ${{ secrets.PASSWORD }}
           source: './*'
           target: '/home/alexwolf/sinusbot/botdata/scripts'
