@@ -14,7 +14,7 @@ jobs:
           # Remote host
           host: ${{ secrets.REMOTE_HOST }}
           # Remote host SSH port. Default 22
-          port: 2222
+          port: 22
           # Remote host user
           user: ${{ secrets.REMOTE_USER }}
           # SSH private key
