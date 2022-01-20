@@ -14,10 +14,9 @@ jobs:
       - uses: actions/checkout@master
       - name: SCP files via ssh key
         uses: appleboy/scp-action@master
-        env:
-          USERNAME: ${{ secrets.REMOTE_USER }}
-          HOST: ${{ secrets.REMOTE_HOST }}
-          KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         with:
+          username: ${{ secrets.REMOTE_USER }}
+          host: ${{ secrets.REMOTE_HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: './*'
           target: '/home/alexwolf/sinusbot/botdata/scripts'
