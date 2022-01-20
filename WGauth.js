@@ -190,6 +190,7 @@ function setClanRank( uid, clanchannel, role) {
 			// success!
 			//engine.log("Response: " + response.data.toString());
 			let clnt = backend.getClientByUID(uid);
+			engine.log(uid);
 			engine.log(clnt.getChannels()[0]);
 			engine.log(config.authchannel);
 			if (Boolean(clnt)) {
@@ -203,7 +204,7 @@ function setClanRank( uid, clanchannel, role) {
 
 function setPermission(wgid, uid) {
 	let clanIDurl = wgAPIurl+'clans/accountinfo/?application_id='+config.WGapiID+'&account_id='+wgid+'&fields=clan%2C+role';
-	engine.log(clanIDurl);
+	//engine.log(clanIDurl);
 	http.simpleRequest({
 		'method': 'GET',
 		'url': clanIDurl,
@@ -218,9 +219,7 @@ function setPermission(wgid, uid) {
 			return;
 		}
 		// success!
-		//engine.log(response);
 		let mydata = JSON.parse(response.data);
-		engine.log(mydata);
 		if ( Boolean(mydata.data[wgid])) {
 			let clan = mydata.data[wgid].clan;
 			let role = mydata.data[wgid].role;
