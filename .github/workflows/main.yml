@@ -16,10 +16,10 @@ jobs:
           # Remote host SSH port. Default 22
           port: 2222
           # Remote host user
-          user: ${{ secrets.REMOTE_HOST }}
+          user: ${{ secrets.REMOTE_USER }}
           # SSH private key
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           # Repo directory path. Default whole repo
-          source: 'dist/*'
+          source: '$(pwd)/*'
           # Remote directory path. Default home directory (~/)
           destination: '/home/alexwolf/sinusbot/botdata/scripts'
