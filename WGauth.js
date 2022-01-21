@@ -355,9 +355,25 @@ function setPermission(wgid, uid) {
 			//select p.access_token from wgchannels as c, wgplayers as p where c.channelid=1412 and c.clanid=p.clanid and p.uid=
 			if (dbc) dbc.query("SELECT p.access_token AS token FROM wgchannels AS c, wgplayers as p WHERE c.channelid=1412 AND c.clanid=p.clanid AND p.uid='"+client.uid()+"'", function(err, res) {
 				if (!err) {
-					res.forEach( row => {
-						engine.log(parseString(row.token));
-					});
+					// Request online clan members from WG API
+					let token = parseString(res[0].token);
+					http.simpleRequest({
+						'method': 'GET',
+						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id=3304ff257847fa9e6190fd96ea67fb3d&clan_id=29859&access_token="+token+"&extra=private.online_members",
+					'timeout': 6000,
+					}, function (error, response) {
+						if (error) {
+								engine.log("Error: " + error);
+								return;
+						}
+						if (response.statusCode != 200) {
+							engine.log("HTTP Error: " + response.status);
+							return;
+						}
+						// success!
+						let mydata = JSON.parse(response.data);
+						engine.log(mydata.data);
+					}
 				}
 			});
 			return;
