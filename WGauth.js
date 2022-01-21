@@ -383,7 +383,7 @@ function setPermission(wgid, uid) {
 						let notAuth = [];
 						let offline = [];
 						clan.private.online_members.forEach( id => {
-							channel_desc += ("[TR][TD]"+clan.members[id].account_name+"[/TD][TD]Not registred[/TD][TD]Not connected[/TD]");
+							channel_desc += ("[TR][TD]"+clan.members[id].account_name+"[/TD][TD]Not registred[/TD][TD]Not connected[/TD][/TR]");
 						});
 						toChannel.setDescription(channel_desc);
 					});
