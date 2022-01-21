@@ -396,7 +396,8 @@ function setPermission(wgid, uid) {
 											if (Boolean(clnt)) {
 												channel_desc += ("[TR][TD][green]"+clan.members[id].account_name+"[/TD][TD][green]Registred[/TD][TD][green]"+clnt.getChannels()[0]+"[/TD][/TR]");
 //												channel_desc += ("[TR][TD][green]"+clan.members[id].account_name+"[/TD][TD]Not registred[/TD][TD]Not connected[/TD][/TR]");
-												
+											}
+										}											
 									});
 								});
 								channel_desc += "[/TABLE]";
