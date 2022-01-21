@@ -379,7 +379,7 @@ function setPermission(wgid, uid) {
 								res.forEach( row => {
 									let wgid = parseString(row.wgid);
 									let uid = parseString(row.uid);
-									tsclan.push({uid: wgid});
+									tsclan.push(wgid,uid);
 								});
 								engine.log(tsclan);
 								let channel_desc = config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name);
