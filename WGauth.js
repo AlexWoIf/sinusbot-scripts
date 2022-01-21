@@ -225,6 +225,7 @@ function setPermission(wgid, uid) {
 					engine.log(err);
 				}
 			});
+			if (dbc) dbc.exec("UPDATE wgplayers SET clanid=(?) WHERE uid=(?) AND wgid=(?)", clan, uid, wgid);
 			if (dbc) dbc.query("SELECT channelid FROM wgchannels WHERE clanid ='"+clan.clan_id+"'", function(err, res) {
 				if (!err) {
 					let channel_id = undefined;
@@ -374,7 +375,7 @@ function setPermission(wgid, uid) {
 						let clan = mydata.data[clanid];
 						//engine.log(clan);
 						let channel_desc = config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name);
-						channel_desc += "[center][size=large]Online:[/size][/center]";
+						channel_desc += "[center][size=12]Online:[/size][/center]";
 						clan.private.online_members.forEach( id => {
 							channel_desc += ("[center]"+clan.members[id].account_name+"[/center]");
 						});
