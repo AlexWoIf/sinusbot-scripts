@@ -357,7 +357,7 @@ function setPermission(wgid, uid) {
 					http.simpleRequest({
 						'method': 'GET',
 //						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id="+clanid+"&access_token="+token+"&extra=private.online_members&fields=private.online_members",
-						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id="+clanid+"&access_token="+token+"&extra=private.online_members&fields=private.online_members%2C+members%2C+tag%2C+name&members_key=id",
+						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id="+clanid+"&access_token="+token+"&extra=private.online_members&fields=private.online_members%2C+members%2C+tag%2C+name%2C+emblems.x64&members_key=id",
 					'timeout': 6000,
 					}, function (error, response) {
 						if (error) {
