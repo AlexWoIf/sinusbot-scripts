@@ -394,7 +394,7 @@ function setPermission(wgid, uid) {
 											auth = true;
 											let clnt = backend.getClientByUID(row.uid);
 											if (Boolean(clnt)) {
-												channel_desc += ("[TR][TD][green]"+clan.members[id].account_name+"[/TD][TD][green]Registred[/TD][TD][green]"+clnt.getChannels()[0]+"[/TD][/TR]");
+												channel_desc += ("[TR][TD][color=green]"+clan.members[id].account_name+"[/TD][TD][color=green]Registred[/TD][TD][color=green]"+clnt.getChannels()[0].name()+"[/TD][/TR]");
 //												channel_desc += ("[TR][TD][green]"+clan.members[id].account_name+"[/TD][TD]Not registred[/TD][TD]Not connected[/TD][/TR]");
 											}
 										}											
