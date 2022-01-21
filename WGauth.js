@@ -190,9 +190,9 @@ function setClanRank( uid, clanchannel, role) {
 			// success!
 			//engine.log("Response: " + response.data.toString());
 			let clnt = backend.getClientByUID(uid);
-			engine.log(uid);
-			engine.log(clnt.getChannels()[0].id());
-			engine.log(config.authchannel);
+//			engine.log(uid);
+//			engine.log(clnt.getChannels()[0].id());
+//			engine.log(config.authchannel);
 			if (Boolean(clnt)) {
 				if ( clnt.getChannels()[0].id() == config.authchannel ) {
 					clnt.moveTo(clanchannel);
@@ -234,7 +234,6 @@ function setPermission(wgid, uid) {
 					let channel_id = undefined;
 					if (res.length == 1) {
 						channel_id = parseString(res[0].channelid);
-						//engine.log(channel_id);
 					}
 					// Create channel if not exist
 					if ( !Boolean(channel_id) ) {
@@ -242,8 +241,6 @@ function setPermission(wgid, uid) {
 						let channel_name = encodeURIComponent(config.channelName.replace('&t',clan.tag).replace('&n',clan.name));
 //						let channel_desc = encodeURIComponent("[img]"+clan.emblems.x64.wot+"[/img]");
 						let channel_desc = encodeURIComponent(config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name));
-						//engine.log(channel_name);
-						//engine.log(channel_desc);
 						http.simpleRequest({
 							'method': 'GET',
 							'url': 'http://'+config.addrTS3+':10080/1/channelcreate?channel_name='+channel_name+'&channel_description='+channel_desc+'&cpid='+config.parentchannel,
@@ -355,11 +352,11 @@ function setPermission(wgid, uid) {
 				}
 			});
 			// Search player by uid
-			if (dbc) dbc.query("SELECT wgid FROM wgplayers WHERE uid ='"+client.uid()+"'", function(err, res) {
+			//select p.access_token from wgchannels as c, wgplayers as p where c.channelid=1412 and c.clanid=p.clanid and p.uid=
+			if (dbc) dbc.query("SELECT p.access_token AS token FROM wgchannels AS c, wgplayers as p WHERE c.channelid=1412 AND c.clanid=p.clanid AND p.uid='"+client.uid()+"'", function(err, res) {
 				if (!err) {
 					res.forEach( row => {
-						let wgid = parseString(row.wgid);
-//						setPermission(wgid, client.uid());
+						engine.log(parseString(row.token));
 					});
 				}
 			});
