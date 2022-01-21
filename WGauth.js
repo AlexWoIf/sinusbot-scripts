@@ -378,16 +378,19 @@ function setPermission(wgid, uid) {
 								let tsclan = [];
 								res.forEach( row => {
 									let wgid = parseString(row.wgid);
+									engine.log(wgid);
 									let uid = parseString(row.uid);
+									engine.log(uid);
 									tsclan.push(wgid,uid);
 								});
 								engine.log(tsclan);
 								let channel_desc = config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name);
-								channel_desc += "[center][size=12]Online("+clan.private.online_members.length+"):[/size][/center][TABLE]"+
+								channel_desc += "[center][size=12]Online("+clan.private.online_members.length+"):[/size][/center][center][TABLE]"+
 								"[TR][TH]WoT nickname[/TH][TH]Authorized[/TH][TH]Channel/Nick[/TH][/TR]";
 								let notAuth = [];
 								let offline = [];
 								clan.private.online_members.forEach( id => {
+									
 									channel_desc += ("[TR][TD]"+clan.members[id].account_name+"[/TD][TD]Not registred[/TD][TD]Not connected[/TD][/TR]");
 								});
 								channel_desc += "[/TABLE]";
