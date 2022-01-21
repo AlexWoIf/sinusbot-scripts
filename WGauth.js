@@ -370,6 +370,7 @@ function setPermission(wgid, uid) {
 						}
 						// success!
 						let mydata = JSON.parse(response.data);
+						engine.log(mydata.data);
 						let clan = mydata.data[clanid];
 						//engine.log(clan);
 						let channel_desc = config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name);
