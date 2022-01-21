@@ -378,7 +378,7 @@ function setPermission(wgid, uid) {
 							}
 						});
 */						let channel_desc = config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name);
-						channel_desc += "[center][size=12]Online:[/size][/center]";
+						channel_desc += "[center][size=12]Online("+clan.private.online_members.length+"):[/size][/center]";
 						clan.private.online_members.forEach( id => {
 							channel_desc += ("[center]"+clan.members[id].account_name+"[/center]");
 						});
