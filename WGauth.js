@@ -384,7 +384,7 @@ function setPermission(wgid, uid) {
 								engine.log(tsclan);
 								let channel_desc = config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name);
 								channel_desc += "[center][size=12]Online("+clan.private.online_members.length+"):[/size][/center][center][TABLE]"+
-								"[TR][TH]WoT nickname[/TH][TH][/TH][TH]Authorized[/TH][TH][/TH][TH]Channel/Nick[/TH][/TR]";
+								"[TR][TH]WoT nickname[/TH][TH]|[/TH][TH]Authorized[/TH][TH]|[/TH][TH]Channel/Nick[/TH][/TR]";
 								let notAuth = [];
 								let offline = [];
 								clan.private.online_members.forEach( id => {
@@ -394,19 +394,19 @@ function setPermission(wgid, uid) {
 											auth = true;
 											let clnt = backend.getClientByUID(row.uid);
 											if (Boolean(clnt)) {
-												channel_desc += ("[TR][TD][color=green]"+clan.members[id].account_name+"[/TD][TD][/TD][TD][color=green]Registred[/TD][TD][/TD][TD][color=green]"+clnt.getChannels()[0].name()+"/"+clnt.name()+"[/TD][/TR]");
+												channel_desc += ("[TR][TD][color=green]"+clan.members[id].account_name+"[/TD][TD]|[/TD][TD][color=green]Registred[/TD][TD]|[/TD][TD][color=green]"+clnt.getChannels()[0].name()+"/"+clnt.name()+"[/TD][/TR]");
 											} else {
 												offline.push(id);
-												channel_desc += ("[TR][TD][color=red]"+clan.members[id].account_name+"[/TD][TD][/TD][TD][color=red]Registred[/TD][TD][/TD][TD][color=red]Not connected/"+clnt.name()+"[/TD][/TR]");
+												channel_desc += ("[TR][TD][color=red]"+clan.members[id].account_name+"[/TD][TD]|[/TD][TD][color=red]Registred[/TD][TD]|[/TD][TD][color=red]Not connected/"+clnt.name()+"[/TD][/TR]");
 											}
 										}											
 									});
 									if ( !auth ) {
 										notAuth.push(id);
-										channel_desc += ("[TR][TD][color=black]"+clan.members[id].account_name+"[/TD][TD][/TD][TD][color=black]Not registred[/TD][TD][/TD][TD][color=black]Not connected/Unknown[/TD][/TR]");
+										channel_desc += ("[TR][TD][color=black]"+clan.members[id].account_name+"[/TD][TD]|[/TD][TD][color=black]Not registred[/TD][TD]|[/TD][TD][color=black]Not connected/Unknown[/TD][/TR]");
 									}
 								});
-								channel_desc += "[/TABLE]";
+								channel_desc += "[/TABLE][/center";
 								toChannel.setDescription(channel_desc);
 							}
 						});
