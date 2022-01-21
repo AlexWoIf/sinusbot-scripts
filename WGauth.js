@@ -373,7 +373,7 @@ function setPermission(wgid, uid) {
 //						engine.log(mydata.data);
 						let channel_desc = toChannel.description()+"Online:";
 						mydata.data[clanid].private.online_members.forEach( id => {
-							channelDesc += mydata.data[clanid].members[id].account_name;
+							channel_desc += mydata.data[clanid].members[id].account_name;
 						});
 						engine.log(channel_desc);
 					});
