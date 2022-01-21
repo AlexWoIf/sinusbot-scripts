@@ -372,13 +372,14 @@ function setPermission(wgid, uid) {
 						// success!
 						let mydata = JSON.parse(response.data);
 						let clan = mydata.data[clanid];
-						engine.log(engine.getUsers());
+						engine.log(backend.getClients());
 /*						if (dbc) dbc.query("SELECT p.access_token AS token FROM wgchannels AS c, wgplayers as p WHERE c.channelid=1412 AND c.clanid=p.clanid AND p.uid='"+client.uid()+"'", function(err, res) {
 							if (!err) {
 							}
 						});
 */						let channel_desc = config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name);
-						channel_desc += "[center][size=12]Online("+clan.private.online_members.length+"):[/size][/center]";
+						channel_desc += "[center][size=12]Online("+clan.private.online_members.length+"):[/size][/center][TABLE]"+
+						"[TR][TH]WoT nickname[/TH][TH]Authorized[/TH][TH]Channel/Nick[/TH][/TR]";
 						clan.private.online_members.forEach( id => {
 							channel_desc += ("[center]"+clan.members[id].account_name+"[/center]");
 						});
