@@ -371,13 +371,13 @@ function setPermission(wgid, uid) {
 						// success!
 						let mydata = JSON.parse(response.data);
 						let clan = mydata.data[clanid];
-						engine.log(clan);
+						//engine.log(clan);
 						let channel_desc = config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name);
 						channel_desc += "[center]Online:[/center]";
 						clan.private.online_members.forEach( id => {
 							channel_desc += ("[center]"+clan.members[id].account_name+"[/center]");
 						});
-						engine.log(channel_desc);
+						toChannel.setDescription(channel_desc);
 					});
 				}
 			});
