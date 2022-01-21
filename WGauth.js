@@ -357,7 +357,7 @@ function setPermission(wgid, uid) {
 					http.simpleRequest({
 						'method': 'GET',
 //						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id="+clanid+"&access_token="+token+"&extra=private.online_members&fields=private.online_members",
-						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id="+clanid+"&access_token="+token+"&extra=private.online_members&fields=private.online_members%2C+members&members_key=id",
+						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id="+clanid+"&access_token="+token+"&extra=private.online_members&fields=private.online_members%2C+members%2C+tag%2C+name&members_key=id",
 					'timeout': 6000,
 					}, function (error, response) {
 						if (error) {
@@ -371,10 +371,11 @@ function setPermission(wgid, uid) {
 						// success!
 						let mydata = JSON.parse(response.data);
 //						engine.log(mydata.data);
+						let clan = mydata.data[clanid];
 						let channel_desc = config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name);
 						channel_desc += "[center]Online:[/center]";
-						mydata.data[clanid].private.online_members.forEach( id => {
-							channel_desc += ("[center]"+mydata.data[clanid].members[id].account_name+"[/center]");
+						clan.private.online_members.forEach( id => {
+							channel_desc += ("[center]"+clan.members[id].account_name+"[/center]");
 						});
 						engine.log(channel_desc);
 					});
