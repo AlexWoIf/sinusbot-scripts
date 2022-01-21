@@ -372,8 +372,8 @@ function setPermission(wgid, uid) {
 						// success!
 						let mydata = JSON.parse(response.data);
 						let clan = mydata.data[clanid];
-						engine.log(backend.getClients());
-						if (dbc) dbc.query("SELECT uid, wgid FROM wgwgplayers WHERE clanid=(?)", clanid, function(err, res) {
+						//engine.log(backend.getClients());
+						if (dbc) dbc.query("SELECT uid, wgid FROM wgplayers WHERE clanid=(?)", clanid, function(err, res) {
 							if (!err) {
 								let tsclan = [];
 								res.forEach( row => {
