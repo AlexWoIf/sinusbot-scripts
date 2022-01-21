@@ -373,19 +373,27 @@ function setPermission(wgid, uid) {
 						let mydata = JSON.parse(response.data);
 						let clan = mydata.data[clanid];
 						engine.log(backend.getClients());
-/*						if (dbc) dbc.query("SELECT p.access_token AS token FROM wgchannels AS c, wgplayers as p WHERE c.channelid=1412 AND c.clanid=p.clanid AND p.uid='"+client.uid()+"'", function(err, res) {
+						if (dbc) dbc.query("SELECT uid, wgid FROM wgwgplayers WHERE clanid=(?)", clanid, function(err, res) {
 							if (!err) {
+								let tsclan = [];
+								res.forEach( row => {
+									let wgid = parseString(row.wgid);
+									let uid = parseString(row.uid);
+									tsclan.push({uid: wgid});
+								});
+								engine.log(tsclan);
+								let channel_desc = config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name);
+								channel_desc += "[center][size=12]Online("+clan.private.online_members.length+"):[/size][/center][TABLE]"+
+								"[TR][TH]WoT nickname[/TH][TH]Authorized[/TH][TH]Channel/Nick[/TH][/TR]";
+								let notAuth = [];
+								let offline = [];
+								clan.private.online_members.forEach( id => {
+									channel_desc += ("[TR][TD]"+clan.members[id].account_name+"[/TD][TD]Not registred[/TD][TD]Not connected[/TD][/TR]");
+								});
+								channel_desc += "[/TABLE]";
+								toChannel.setDescription(channel_desc);
 							}
 						});
-*/						let channel_desc = config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name);
-						channel_desc += "[center][size=12]Online("+clan.private.online_members.length+"):[/size][/center][TABLE]"+
-						"[TR][TH]WoT nickname[/TH][TH]Authorized[/TH][TH]Channel/Nick[/TH][/TR]";
-						let notAuth = [];
-						let offline = [];
-						clan.private.online_members.forEach( id => {
-							channel_desc += ("[TR][TD]"+clan.members[id].account_name+"[/TD][TD]Not registred[/TD][TD]Not connected[/TD][/TR]");
-						});
-						toChannel.setDescription(channel_desc);
 					});
 				}
 			});
