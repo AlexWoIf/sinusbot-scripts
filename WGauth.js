@@ -342,6 +342,7 @@ function setPermission(wgid, uid) {
 		}
 		// If client enter  clan channel 1412 -> clanid 29859
 		if ( toChannel.id() == 1412) {
+			let clanid = 29859;
 			var dbc = db.connect({ driver: 'mysql', host: config.dbhost, username: config.dbuser, password: config.dbpassword, database: config.dbname }, function(err) {
 				if (err) {
 					engine.log(err);
@@ -355,7 +356,8 @@ function setPermission(wgid, uid) {
 					let token = parseString(res[0].token);
 					http.simpleRequest({
 						'method': 'GET',
-						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id=29859&access_token="+token+"&extra=private.online_members&fields=private.online_members%2C+members&members_key=id",
+//						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id="+clanid+"&access_token="+token+"&extra=private.online_members&fields=private.online_members",
+						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id="+clanid+"&access_token="+token+"&extra=private.online_members&fields=private.online_members%2C+members&members_key=id",
 					'timeout': 6000,
 					}, function (error, response) {
 						if (error) {
@@ -368,7 +370,12 @@ function setPermission(wgid, uid) {
 						}
 						// success!
 						let mydata = JSON.parse(response.data);
-						engine.log(mydata.data);
+//						engine.log(mydata.data);
+						let channel_desc = config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name)+"Online:";
+						mydata.data[clanid].private.online_members.forEach( id => {
+							channelDesc += mydata.data[clanid].members[id].account_name;
+						});
+						engine.log(channel_desc);
 					});
 				}
 			});
