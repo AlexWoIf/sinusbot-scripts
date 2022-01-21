@@ -203,8 +203,8 @@ function setClanRank( uid, clanchannel, role) {
 }
 
 function setPermission(wgid, uid) {
+	// Request WG API - Clan member detail (asc clanid and role)
 	let clanIDurl = wgAPIurl+'clans/accountinfo/?application_id='+config.WGapiID+'&account_id='+wgid+'&fields=clan%2C+role';
-	//engine.log(clanIDurl);
 	http.simpleRequest({
 		'method': 'GET',
 		'url': clanIDurl,
@@ -223,7 +223,7 @@ function setPermission(wgid, uid) {
 		if ( Boolean(mydata.data[wgid])) {
 			let clan = mydata.data[wgid].clan;
 			let role = mydata.data[wgid].role;
-			// Search channel ID by clanID
+			// Search in database channel ID by clanID
 			var dbc = db.connect({ driver: 'mysql', host: config.dbhost, username: config.dbuser, password: config.dbpassword, database: config.dbname }, function(err) {
 				if (err) {
 					engine.log(err);
@@ -242,8 +242,8 @@ function setPermission(wgid, uid) {
 						let channel_name = encodeURIComponent(config.channelName.replace('&t',clan.tag).replace('&n',clan.name));
 //						let channel_desc = encodeURIComponent("[img]"+clan.emblems.x64.wot+"[/img]");
 						let channel_desc = encodeURIComponent(config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name));
-						engine.log(channel_name);
-						engine.log(channel_desc);
+						//engine.log(channel_name);
+						//engine.log(channel_desc);
 						http.simpleRequest({
 							'method': 'GET',
 							'url': 'http://'+config.addrTS3+':10080/1/channelcreate?channel_name='+channel_name+'&channel_description='+channel_desc+'&cpid='+config.parentchannel,
@@ -294,6 +294,7 @@ function setPermission(wgid, uid) {
 		if ( toChannel == undefined ) {
 			return;
 		}
+		// If client just connect to server
 		if ( !Boolean(fromChannel) ){
 			var dbc = db.connect({ driver: 'mysql', host: config.dbhost, username: config.dbuser, password: config.dbpassword, database: config.dbname }, function(err) {
 				if (err) {
@@ -305,12 +306,15 @@ function setPermission(wgid, uid) {
 				if (!err) {
 					res.forEach( row => {
 						let wgid = parseString(row.wgid);
-							//engine.log(wgid);
 						setPermission(wgid, client.uid());
+						// Update access_token
+						// ...
 					});
 				}
 			});
+			return;
 		}
+		// If client enter Auth channel
         if ( toChannel.id() == config.authchannel ) {
 			// Generate auth link via send request
 			let ruid = crypto.randomBytes(16).toHex();
@@ -340,6 +344,24 @@ function setPermission(wgid, uid) {
 				// Send link to client chat
 //				client.poke("Link for authorization: https://ts3.alexwolf.ru/auth/?ruid="+ruid);
 				client.poke("Ссылка для авторизации: https://ts3.alexwolf.ru/auth/?ruid="+ruid);
+			});
+			return;
+		}
+		// If client enter  clan channel 1412 -> clanid 29859
+		if ( toChannel.id() == 1412) {
+			var dbc = db.connect({ driver: 'mysql', host: config.dbhost, username: config.dbuser, password: config.dbpassword, database: config.dbname }, function(err) {
+				if (err) {
+					engine.log(err);
+				}
+			});
+			// Search player by uid
+			if (dbc) dbc.query("SELECT wgid FROM wgplayers WHERE uid ='"+client.uid()+"'", function(err, res) {
+				if (!err) {
+					res.forEach( row => {
+						let wgid = parseString(row.wgid);
+//						setPermission(wgid, client.uid());
+					});
+				}
 			});
 			return;
 		}
