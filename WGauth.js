@@ -378,9 +378,9 @@ function setPermission(wgid, uid) {
 								let tsclan = [];
 								res.forEach( row => {
 									let wgid = parseString(row.uid);
-									engine.log(uid);
-									let uid = parseString(row.wgid);
 									engine.log(wgid);
+									let uid = parseString(row.wgid);
+									engine.log(uid);
 									tsclan.push(wgid,uid);
 								});
 								engine.log(tsclan);
