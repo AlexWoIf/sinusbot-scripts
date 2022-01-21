@@ -389,7 +389,7 @@ function setPermission(wgid, uid) {
 								let offline = [];
 								clan.private.online_members.forEach( id => {
 									let auth = false;
-									tsclan.foreach( row => {
+									tsclan.forEach( row => {
 										if ( row.wgid == id ) {
 											auth = true;
 											let clnt = backend.getClientByUID(row.uid);
