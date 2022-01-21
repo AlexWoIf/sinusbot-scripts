@@ -388,8 +388,16 @@ function setPermission(wgid, uid) {
 								let notAuth = [];
 								let offline = [];
 								clan.private.online_members.forEach( id => {
-									
-									channel_desc += ("[TR][TD]"+clan.members[id].account_name+"[/TD][TD]Not registred[/TD][TD]Not connected[/TD][/TR]");
+									let auth = false;
+									tsclan.foreach( row => {
+										if ( row.wgid == id ) {
+											auth = true;
+											let clnt = backend.getClientByUID(row.uid);
+											if (Boolean(clnt)) {
+												channel_desc += ("[TR][TD][green]"+clan.members[id].account_name+"[/TD][TD][green]Registred[/TD][TD][green]"+clnt.getChannels()[0]+"[/TD][/TR]");
+//												channel_desc += ("[TR][TD][green]"+clan.members[id].account_name+"[/TD][TD]Not registred[/TD][TD]Not connected[/TD][/TR]");
+												
+									});
 								});
 								channel_desc += "[/TABLE]";
 								toChannel.setDescription(channel_desc);
