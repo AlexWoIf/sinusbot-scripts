@@ -380,8 +380,10 @@ function setPermission(wgid, uid) {
 */						let channel_desc = config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name);
 						channel_desc += "[center][size=12]Online("+clan.private.online_members.length+"):[/size][/center][TABLE]"+
 						"[TR][TH]WoT nickname[/TH][TH]Authorized[/TH][TH]Channel/Nick[/TH][/TR]";
+						let notAuth = [];
+						let offline = [];
 						clan.private.online_members.forEach( id => {
-							channel_desc += ("[center]"+clan.members[id].account_name+"[/center]");
+							channel_desc += ("[TR][TD]"+clan.members[id].account_name+"[/TD][TD]Not registred[/TD][TD]Not connected[/TD]");
 						});
 						toChannel.setDescription(channel_desc);
 					});
