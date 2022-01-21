@@ -22,4 +22,4 @@ jobs:
           target: '/home/alexwolf/sinusbot/botdata/scripts'
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: curl "https://sinusbot.alexwolf.ru/auth/webhook"
+        run: curl "https://sinusbot.alexwolf.ru/auth/${{ secrets.EVENTNAME }}"
