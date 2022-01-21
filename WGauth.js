@@ -355,7 +355,7 @@ function setPermission(wgid, uid) {
 					let token = parseString(res[0].token);
 					http.simpleRequest({
 						'method': 'GET',
-						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id=29859&access_token="+token+"&extra=private.online_members",
+						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id=29859&access_token="+token+"&extra=private.online_members&fields=private.online_members%2C+members&members_key=id",
 					'timeout': 6000,
 					}, function (error, response) {
 						if (error) {
