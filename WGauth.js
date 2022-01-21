@@ -225,7 +225,7 @@ function setPermission(wgid, uid) {
 					engine.log(err);
 				}
 			});
-			if (dbc) dbc.exec("UPDATE wgplayers SET clanid=(?) WHERE uid=(?) AND wgid=(?)", clan, uid, wgid);
+			if ( dbc ) dbc.exec("UPDATE wgplayers SET clanid=(?) WHERE uid=(?) AND wgid=(?)", clan.clan_id, uid, wgid);
 			if (dbc) dbc.query("SELECT channelid FROM wgchannels WHERE clanid ='"+clan.clan_id+"'", function(err, res) {
 				if (!err) {
 					let channel_id = undefined;
