@@ -154,7 +154,7 @@ function setClanRank( uid, clanchannel, role) {
 		default:
 			engine.log(role);
 	}
-	// Find DBid for 'uid'
+	// Find DBid for 'uid' using TS WebQuery
 	http.simpleRequest({
 		'method': 'GET',
 		'url': 'http://'+config.addrTS3+':10080/1/clientdbfind?pattern='+encodeURIComponent(uid)+'&-uid',
@@ -172,7 +172,7 @@ function setClanRank( uid, clanchannel, role) {
 		// success!
 		let mydata = JSON.parse(response.data);
 		//engine.log("Response: " + mydata.body[0].cldbid);
-		// Set channelgroup 'group' for channel 'channel_id' for client 'client.uid()'
+		// Set channelgroup 'group' for channel 'channel_id' for client 'client.uid()' using TS WebQuery
 		http.simpleRequest({
 			'method': 'GET',
 			'url': 'http://'+config.addrTS3+':10080/1/setclientchannelgroup?cgid='+group+'&cid='+clanchannel+'&cldbid='+mydata.body[0].cldbid,
@@ -188,11 +188,7 @@ function setClanRank( uid, clanchannel, role) {
 				return;
 			}
 			// success!
-			//engine.log("Response: " + response.data.toString());
 			let clnt = backend.getClientByUID(uid);
-//			engine.log(uid);
-//			engine.log(clnt.getChannels()[0].id());
-//			engine.log(config.authchannel);
 			if (Boolean(clnt)) {
 				if ( clnt.getChannels()[0].id() == config.authchannel ) {
 					clnt.moveTo(clanchannel);
@@ -203,7 +199,7 @@ function setClanRank( uid, clanchannel, role) {
 }
 
 function setPermission(wgid, uid) {
-	// Request WG API - Clan member detail (asc clanid and role)
+	// Request Clan member detail (asc clanid and role) using WG API
 	let clanIDurl = wgAPIurl+'clans/accountinfo/?application_id='+config.WGapiID+'&account_id='+wgid+'&fields=clan%2C+role';
 	http.simpleRequest({
 		'method': 'GET',
@@ -359,7 +355,7 @@ function setPermission(wgid, uid) {
 					let token = parseString(res[0].token);
 					http.simpleRequest({
 						'method': 'GET',
-						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id=3304ff257847fa9e6190fd96ea67fb3d&clan_id=29859&access_token="+token+"&extra=private.online_members",
+						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id=29859&access_token="+token+"&extra=private.online_members",
 					'timeout': 6000,
 					}, function (error, response) {
 						if (error) {
