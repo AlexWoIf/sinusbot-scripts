@@ -369,7 +369,7 @@ function setPermission(wgid, uid) {
 						// success!
 						let mydata = JSON.parse(response.data);
 						engine.log(mydata.data);
-					}
+					});
 				}
 			});
 			return;
