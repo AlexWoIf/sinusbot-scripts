@@ -191,7 +191,7 @@ function setClanRank( uid, clanchannel, role) {
 			//engine.log("Response: " + response.data.toString());
 			let clnt = backend.getClientByUID(uid);
 			engine.log(uid);
-			engine.log(clnt.getChannels()[0]);
+			engine.log(clnt.getChannels()[0].id());
 			engine.log(config.authchannel);
 			if (Boolean(clnt)) {
 				if ( clnt.getChannels()[0].id() == config.authchannel ) {
