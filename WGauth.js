@@ -50,16 +50,16 @@ registerPlugin({
 		}, {
 			name: 'subChannels',
 			indent: 2,
-			title: 'Channel options for clan\'s lobbies',
+			title: 'Create subchannels',
 			type: 'array',
 			vars: [{
-				name: 'optionName',
-				title: 'Permission name (string like i_channel_needed_join_power)',
+				name: 'subchannelName',
+				title: 'Subchannel name',
 				type: 'string'
 			},{
-				name: 'subChannels',
+				name: 'subChannelOptions',
 				indent: 2,
-				title: 'Channel options for clan\'s lobbies',
+				title: 'Channel options for subchannel',
 				type: 'array',
 				vars: [{
 					name: 'optionName',
@@ -407,7 +407,7 @@ function setPermission(wgid, uid) {
 								});
 								//engine.log(tsclan);
 								let channel_desc = config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name);
-								channel_desc += "[center][size=12]Online("+clan.private.online_members.length+"):[/size][/center][center][TABLE]"+
+								channel_desc += "[center][size=12]Online("+clan.private.online_members.length+"):[/size]\n[TABLE]"+
 								"[TR][TH]WoT nickname[/TH][TD]|[/TD][TH]Authorized[/TH][TD]|[/TD][TH]Nick[/TH][TD]|[/TD][TH]Channel[/TH][/TR]";
 								let notAuth = [];
 								let offline = [];
