@@ -17,94 +17,118 @@ registerPlugin({
 		name: 'channeldata',
 	    title: 'New clans owned channels parameters',
 	},{
-	    name: 'channelName',
-	    indent: 2,
-	    title: 'Channel name format (placeholders: &t-clan TAG, &n-clan name)',
-	    type: 'string',
-		default: '[&t]&n'
-	}, {
-	    name: 'channelDesc',
-	    indent: 2,
-	    title: 'Channel description format (placeholders: &t-clan TAG, &n-clan name, &e-64x64 emblem)',
-	    type: 'multiline',
-		default: '[center][size=x-large][COLOR=#ff0000][&t]&n[/COLOR][/size][/center][center]&e[/center]'
-	}, {
-	    name: 'parentchannel',
-	    indent: 2,
-	    title: 'Parent channel for clan\'s lobbies',
-	    type: 'channel'
-	}, {
-	    name: 'channelOptions',
-	    indent: 2,
-	    title: 'Channel options for clan\'s lobbies',
-	    type: 'array',
-		vars: [{
-			name: 'optionName',
-			title: 'Permission name (string like i_channel_needed_join_power)',
-			type: 'string'
-		},{
-			name: 'optionValue',
-			title: 'Permission value',
-			type: 'string'
-		}]
+			name: 'channelName',
+			indent: 2,
+			title: 'Channel name format (placeholders: &t-clan TAG, &n-clan name)',
+			type: 'string',
+			default: '[&t]&n'
+		}, {
+			name: 'channelDesc',
+			indent: 2,
+			title: 'Channel description format (placeholders: &t-clan TAG, &n-clan name, &e-64x64 emblem)',
+			type: 'multiline',
+			default: '[center][size=x-large][COLOR=#ff0000][&t]&n[/COLOR][/size][/center][center]&e[/center]'
+		}, {
+			name: 'parentchannel',
+			indent: 2,
+			title: 'Parent channel for clan\'s lobbies',
+			type: 'channel'
+		}, {
+			name: 'channelOptions',
+			indent: 2,
+			title: 'Channel options for clan\'s lobbies',
+			type: 'array',
+			vars: [{
+				name: 'optionName',
+				title: 'Permission name (string like i_channel_needed_join_power)',
+				type: 'string'
+			},{
+				name: 'optionValue',
+				title: 'Permission value',
+				type: 'string'
+			}]
+		}, {
+			name: 'subChannels',
+			indent: 2,
+			title: 'Channel options for clan\'s lobbies',
+			type: 'array',
+			vars: [{
+				name: 'optionName',
+				title: 'Permission name (string like i_channel_needed_join_power)',
+				type: 'string'
+			},{
+				name: 'subChannels',
+				indent: 2,
+				title: 'Channel options for clan\'s lobbies',
+				type: 'array',
+				vars: [{
+					name: 'optionName',
+					title: 'Permission name (string like i_channel_needed_join_power)',
+					type: 'string'
+				},{
+					name: 'optionValue',
+					title: 'Permission value',
+					type: 'string'
+				}]
+			}]
 	}, {
 		name: 'tsdata',
 	    title: 'Teamspeak WebQuery access data',
 	}, {
-	    name: 'apikeyWebQuery',
-	    indent: 2,
-	    title: 'Teamspeak WebQuery apikey',
-	    placeholder: '987654321',
-	    type: 'password'
-	}, {
-	    name: 'addrTS3',
-	    indent: 2,
-	    title: 'TeamSpeak WebQuery address',
-	    type: 'string'
+			name: 'apikeyWebQuery',
+			indent: 2,
+			title: 'Teamspeak WebQuery apikey',
+			placeholder: '987654321',
+			type: 'password'
+		}, {
+			name: 'addrTS3',
+			indent: 2,
+			title: 'TeamSpeak WebQuery address',
+			type: 'string'
 	}, {
 		name: 'wgdata',
 	    title: 'Wargaming public API access data',
 	}, {
-	    name: 'realm',
-	    indent: 2,
-	    title: 'Realm for the request',
-	    type: 'select',
-		options: [ 'ru', 'eu', 'na', 'asia' ]
-	}, {
-	    name: 'gametype',
-	    indent: 2,
-	    title: 'API(game) type (not working yet)',
-	    type: 'select',
-		options: [ 'WORLD OF TANKS', 'WORLD OF WARSHIPS' ] // also available: WORLD OF WARPLANES, WORLD OF TANKS BLITZ, WORLD OF TANKS CONSOLE
-	}, {
-	    name: 'WGapiID',
-	    indent: 2,
-	    title: 'Wargaming application ID',
-	    placeholder: '12345678901234567890123456789012',
-	    type: 'password'
+			name: 'realm',
+			indent: 2,
+			title: 'Realm for the request',
+			type: 'select',
+			options: [ 'ru', 'eu', 'na', 'asia' ]
+		}, {
+			name: 'gametype',
+			indent: 2,
+			title: 'API(game) type (not working yet)',
+			type: 'select',
+			options: [ 'WORLD OF TANKS', 'WORLD OF WARSHIPS' ] // also available: WORLD OF WARPLANES, WORLD OF TANKS BLITZ, WORLD OF TANKS CONSOLE
+		}, {
+			name: 'WGapiID',
+			indent: 2,
+			title: 'Wargaming application ID',
+			placeholder: '12345678901234567890123456789012',
+			type: 'password'
 	}, {
 		name: 'dbdata',
 	    title: 'Database access data',
 	}, {
-    	name: 'dbhost',
-	    title: 'MySQL database server',
-	    indent: 2,
-	    type: 'string'
-	}, {
-    	name: 'dbuser',
-	    title: 'DB user',
-	    indent: 2,
-	    type: 'string'
-	}, {
-	    name: 'dbpassword',
-	    title: 'DB password',
-	    indent: 2,
-	    type: 'password'
-	}, {
-	    name: 'dbname',
-	    title: 'DB name',
-	    indent: 2,
-	    type: 'string'
+			name: 'dbhost',
+			title: 'MySQL database server',
+			indent: 2,
+			type: 'string'
+		}, {
+			name: 'dbuser',
+			title: 'DB user',
+			indent: 2,
+			type: 'string'
+		}, {
+			name: 'dbpassword',
+			title: 'DB password',
+			indent: 2,
+			type: 'password'
+		}, {
+			name: 'dbname',
+			title: 'DB name',
+			indent: 2,
+			type: 'string'
 	}]
 }, 
 
