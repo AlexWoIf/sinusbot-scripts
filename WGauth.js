@@ -276,30 +276,22 @@ function setPermission(wgid, uid) {
 							if (dbc) dbc.exec("INSERT INTO wgchannels (channelid, clanid) VALUES (?, ?)", channel_id, clan.clan_id);
 							setClanRank(uid, channel_id, role);
 							// Set additional channel permissions using TS WebQuery
-							http.simpleRequest({
-								'method': 'GET',
-								'url': 'http://'+config.addrTS3+':10080/1/channeladdperm?cid='+channel_id+'&permsid=i_channel_needed_permission_modify_power&permvalue=50',
-								'timeout': 6000,
-								'headers': {'x-api-key': config.apikeyWebQuery}
-							}, function (error, response) {
-								if (error) {
-									engine.log("Error: " + error);
-									return;
-								}
-								if (response.statusCode != 200) {
-									engine.log("HTTP Error: " + response.status);
-									return;
-								}
-								// success! Store new clan channel in DB
-								//engine.log("Response: " + response.data.toString());
-								let chnnl = backend.getChannelByID(channel_id);
-								chnnl.getPermissions().forEach(perm => engine.log(perm.name(),":",perm.value()));
-								config.channelOptions.forEach( opt => {
-									let  perm = chnnl.addPermission(config.optionName);
-									if (Boolean(perm)) {
-										perm.setValue(config.optionValue);
-										perm.save();
+							config.channelOptions.forEach( opt => {
+								http.simpleRequest({
+									'method': 'GET',
+									'url': 'http://'+config.addrTS3+':10080/1/channeladdperm?cid='+channel_id+'&permsid='+opt.optionName+'&permvalue='+opt.optionValue,
+									'timeout': 6000,
+									'headers': {'x-api-key': config.apikeyWebQuery}
+								}, function (error, response) {
+									if (error) {
+										engine.log("Error: " + error);
+										return;
 									}
+									if (response.statusCode != 200) {
+										engine.log("HTTP Error: " + response.status);
+										return;
+									}
+									// success! Store new clan channel in DB
 								});
 							});
 						});
