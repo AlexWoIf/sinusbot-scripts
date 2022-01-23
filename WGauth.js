@@ -437,7 +437,7 @@ function setPermission(wgid, uid) {
 											}
 											// success!
 											let mydata = JSON.parse(response.data);
-											engine.log(mydata.data);
+											//engine.log(mydata.data);
 											let clan = mydata.data[clanid];
 											if (dbc) dbc.query("SELECT uid, wgid FROM wgplayers WHERE clanid="+clanid, function(err, res) {
 												if (!err) {
@@ -447,7 +447,7 @@ function setPermission(wgid, uid) {
 														let uid = parseString(row.uid);
 														tsclan.push({wgid:wgid,uid:uid});
 													});
-													engine.log(tsclan);
+													//engine.log(tsclan);
 													let channel_desc = "[center][size=14]Online("+clan.private.online_members.length+"):[/size]\n"+
 													"[size=12]WoT nickname - Authorized - Nick - Channel\n[/size]";
 													let notAuth = [];
