@@ -50,7 +50,7 @@ registerPlugin({
 		}, {
 			name: 'hqChannelName',
 			indent: 2,
-			title: 'Channel name format (placeholders: &t-clan TAG, &n-clan name)',
+			title: 'Channel name for HQ subchannel',
 			type: 'string',
 		}, {
 			name: 'hqChannelOptions',
@@ -277,7 +277,13 @@ function setPermission(wgid, uid) {
 							setClanRank(uid, channel_id, role);
 							// Set additional channel permissions using TS WebQuery (!!! replace this with sinusbot methods !!!)
 							let chnnl = backend.getChannelByID(channel_id);
-							
+							channelOptions.forEach( opt => {
+								let  perm = chnnl.addPermission(optionName);
+								if (Boolean(perm)) {
+									perm.setValue(optionValue);
+									perm.save();
+								}
+							});
 /*							http.simpleRequest({
 								'method': 'GET',
 								'url': 'http://'+config.addrTS3+':10080/1/channeladdperm?cid='+channel_id+'&permsid=i_channel_needed_join_power&permvalue=55',
