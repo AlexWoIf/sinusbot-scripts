@@ -480,7 +480,7 @@ function setPermission(wgid, uid) {
 					}
 				});
 			}
-		}
+		});
 		return;
     });
 
