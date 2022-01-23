@@ -311,13 +311,13 @@ function setPermission(wgid, uid) {
 								// success!
 								let hq_id = JSON.parse(response.data).body[0].cid;
 								//  Store new clan channel in DB
-								if (dbc) dbc.exec("INSERT INTO wgchannels (clanid, channelid, hq_id) VALUES (?, ?, ?)", clan.clan_id, channel_id, hq_id);
+								if (dbc) dbc.exec("INSERT INTO wgchannels (clanid, channelid, hq) VALUES (?, ?, ?)", clan.clan_id, channel_id, hq_id);
 								setClanRank(uid, channel_id, role);
 								// Set additional channel permissions using TS WebQuery
 								config.hqChannelOptions.forEach( opt => {
 									http.simpleRequest({
 										'method': 'GET',
-										'url': 'http://'+config.addrTS3+':10080/1/channeladdperm?cid='+channel_id+'&permsid='+opt.optionName+'&permvalue='+opt.optionValue,
+										'url': 'http://'+config.addrTS3+':10080/1/channeladdperm?cid='+hq_id+'&permsid='+opt.optionName+'&permvalue='+opt.optionValue,
 										'timeout': 6000,
 										'headers': {'x-api-key': config.apikeyWebQuery}
 									}, function (error, response) {
