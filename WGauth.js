@@ -236,15 +236,17 @@ function setPermission(wgid, uid) {
 		// success!
 		let mydata = JSON.parse(response.data);
 		if ( Boolean(mydata.data[wgid])) {
+			let name = mydata.data[wgid].account_name;
 			let clan = mydata.data[wgid].clan;
 			let role = mydata.data[wgid].role;
+
 			// Search in database channel ID by clanID
 			var dbc = db.connect({ driver: 'mysql', host: config.dbhost, username: config.dbuser, password: config.dbpassword, database: config.dbname }, function(err) {
 				if (err) {
 					engine.log(err);
 				}
 			});
-			if (dbc) dbc.exec("UPDATE wgplayers SET clanid=(?) WHERE uid=(?) AND wgid=(?)", clan.clan_id, uid, wgid);
+			if (dbc) dbc.exec("UPDATE wgplayers SET nickname=(?), clanid=(?) WHERE uid=(?) AND wgid=(?)", name, clan.clan_id, uid, wgid);
 			if (dbc) dbc.query("SELECT channelid FROM wgchannels WHERE clanid ='"+clan.clan_id+"'", function(err, res) {
 				if (!err) {
 					let channel_id = undefined;
@@ -348,13 +350,13 @@ function setPermission(wgid, uid) {
 		if ( toChannel == undefined ) {
 			return;
 		}
+		var dbc = db.connect({ driver: 'mysql', host: config.dbhost, username: config.dbuser, password: config.dbpassword, database: config.dbname }, function(err) {
+			if (err) {
+				engine.log(err);
+			}
+		});
 		// If client just connect to server
 		if ( !Boolean(fromChannel) ){
-			var dbc = db.connect({ driver: 'mysql', host: config.dbhost, username: config.dbuser, password: config.dbpassword, database: config.dbname }, function(err) {
-				if (err) {
-					engine.log(err);
-				}
-			});
 			// Search player by uid
 			if (dbc) dbc.query("SELECT wgid FROM wgplayers WHERE uid ='"+client.uid()+"'", function(err, res) {
 				if (!err) {
@@ -388,11 +390,6 @@ function setPermission(wgid, uid) {
 				}
 				// success!
 				// Store request in DB
-				var dbc = db.connect({ driver: 'mysql', host: config.dbhost, username: config.dbuser, password: config.dbpassword, database: config.dbname }, function(err) {
-					if (err) {
-						engine.log(err);
-					}
-				});
 				let mydata = JSON.parse(response.data);
 				if (dbc) dbc.exec("INSERT INTO requests (ruid, uid, url) VALUES (?, ?, ?)", ruid, client.uid(), mydata.data.location);
 				// Send link to client chat
