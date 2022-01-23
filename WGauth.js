@@ -408,7 +408,6 @@ function setPermission(wgid, uid) {
 					if ( toChannel.id() == parseString(row.channelid)) {
 						let clanid = parseString(row.clanid);
 						let hq = backend.getChannelByID(parseString(row.hq));
-						engine.log(parseString(row.hq));
 						var dbc = db.connect({ driver: 'mysql', host: config.dbhost, username: config.dbuser, password: config.dbpassword, database: config.dbname }, function(err) {
 							if (err) {
 								engine.log(err);
@@ -475,7 +474,7 @@ function setPermission(wgid, uid) {
 													});
 													channel_desc += "[/center]";
 													engine.log(channel_desc);
-													engine.log(JSON.parse(hq));
+													engine.log(JSON.stringify(hq));
 													hq.setDescription(channel_desc);
 												}
 											});
