@@ -473,6 +473,8 @@ function setPermission(wgid, uid) {
 														}
 													});
 													channel_desc += "[/center]";
+													engine.log(channel_desc);
+													engine.log(JSON.parse(hq));
 													hq.setDescription(channel_desc);
 												}
 											});
