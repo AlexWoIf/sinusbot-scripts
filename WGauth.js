@@ -405,9 +405,9 @@ function setPermission(wgid, uid) {
 				engine.log(toChannel.id());
 				res.forEach( row => {
 					engine.log(row.channelid);
-					if ( toChannel.id() == row.channelid) {
-						let clanid = row.clanid;
-						let hq = backend.getChannelByID(row.hq);
+					if ( toChannel.id() == parseString(row.channelid)) {
+						let clanid = parseString(row.clanid);
+						let hq = backend.getChannelByID(parseString(row.hq));
 						var dbc = db.connect({ driver: 'mysql', host: config.dbhost, username: config.dbuser, password: config.dbpassword, database: config.dbname }, function(err) {
 							if (err) {
 								engine.log(err);
