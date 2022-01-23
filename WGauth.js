@@ -219,7 +219,7 @@ function setClanRank( uid, clanchannel, role) {
 
 function setPermission(wgid, uid) {
 	// Request Clan member detail (asc clanid and role) using WG API
-	let clanIDurl = wgAPIurl+'clans/accountinfo/?application_id='+config.WGapiID+'&account_id='+wgid+'&fields=clan%2C+role';
+	let clanIDurl = wgAPIurl+'clans/accountinfo/?application_id='+config.WGapiID+'&account_id='+wgid+'&fields=clan%2C+role%2C+account_name';
 	http.simpleRequest({
 		'method': 'GET',
 		'url': clanIDurl,
@@ -278,7 +278,7 @@ function setPermission(wgid, uid) {
 							// Set additional channel permissions using TS WebQuery (!!! replace this with sinusbot methods !!!)
 							http.simpleRequest({
 								'method': 'GET',
-								'url': 'http://'+config.addrTS3+':10080/1/channeladdperm?cid='+channel_id+'&permsid=i_channel_needed_permission_modify_power&permvalue=70',
+								'url': 'http://'+config.addrTS3+':10080/1/channeladdperm?cid='+channel_id+'&permsid=i_channel_needed_permission_modify_power&permvalue=50',
 								'timeout': 6000,
 								'headers': {'x-api-key': config.apikeyWebQuery}
 							}, function (error, response) {
@@ -293,6 +293,7 @@ function setPermission(wgid, uid) {
 								// success! Store new clan channel in DB
 								engine.log("Response: " + response.data.toString());
 								let chnnl = backend.getChannelByID(channel_id);
+								engine.log(chnnl.getPermissions());
 								config.channelOptions.forEach( opt => {
 									let  perm = chnnl.addPermission(config.optionName);
 									if (Boolean(perm)) {
