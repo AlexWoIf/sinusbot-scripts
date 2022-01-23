@@ -415,8 +415,7 @@ function setPermission(wgid, uid) {
 						});
 						// Search player by uid
 						//select p.access_token from wgchannels as c, wgplayers as p where c.channelid=1412 and c.clanid=p.clanid and p.uid=
-						if (dbc) dbc.query("SELECT p.access_token AS token FROM wgchannels AS c, wgplayers as p WHERE c.channelid='+toChannel.id()+' AND c.clanid=p.clanid AND p.uid='"+client.uid()+"'", function(err, res) {
-							engine.log("SELECT p.access_token AS token FROM wgchannels AS c, wgplayers as p WHERE c.channelid="+toChannel.id()+" AND c.clanid=p.clanid AND p.uid='"+client.uid()+"'");
+						if (dbc) dbc.query("SELECT p.access_token AS token FROM wgchannels AS c, wgplayers as p WHERE c.channelid="+toChannel.id()+" AND c.clanid=p.clanid AND p.uid='"+client.uid()+"'", function(err, res) {
 							if (!err) {
 								engine.log(res);
 								// Request online clan members from WG API
