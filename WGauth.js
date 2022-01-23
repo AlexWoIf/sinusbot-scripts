@@ -277,10 +277,10 @@ function setPermission(wgid, uid) {
 							setClanRank(uid, channel_id, role);
 							// Set additional channel permissions using TS WebQuery (!!! replace this with sinusbot methods !!!)
 							let chnnl = backend.getChannelByID(channel_id);
-							channelOptions.forEach( opt => {
-								let  perm = chnnl.addPermission(optionName);
+							config.channelOptions.forEach( opt => {
+								let  perm = chnnl.addPermission(config.optionName);
 								if (Boolean(perm)) {
-									perm.setValue(optionValue);
+									perm.setValue(config.optionValue);
 									perm.save();
 								}
 							});
