@@ -404,7 +404,6 @@ function setPermission(wgid, uid) {
 			if (!err) {
 				//engine.log(toChannel.id());
 				res.forEach( row => {
-					engine.log(parseString(row.hq));
 					if ( toChannel.id() == parseString(row.channelid)) {
 						let clanid = parseString(row.clanid);
 						let hq = backend.getChannelByID(parseString(row.hq));
@@ -473,8 +472,6 @@ function setPermission(wgid, uid) {
 														}
 													});
 													channel_desc += "[/center]";
-													engine.log(channel_desc);
-													engine.log(JSON.stringify(hq));
 													hq.setDescription(channel_desc);
 												}
 											});
