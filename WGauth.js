@@ -402,7 +402,9 @@ function setPermission(wgid, uid) {
 		// Check if client enter  clan channel
 		if (dbc) dbc.query("SELECT * FROM wgchannels", function(err, res) {
 			if (!err) {
+				engine.log(toChannel.id());
 				res.forEach( row => {
+					engine.log(row.channelid);
 					if ( toChannel.id() == row.channelid) {
 						let clanid = row.clanid;
 						let hq = backend.getChannelByID(row.hq);
