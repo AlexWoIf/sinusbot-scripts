@@ -294,6 +294,7 @@ function setPermission(wgid, uid) {
 								//engine.log("Response: " + response.data.toString());
 								let chnnl = backend.getChannelByID(channel_id);
 								chnnl.getPermissions().forEach(perm => engine.log(JSON.parse(perm)));
+								config.channelOptions.forEach( opt => {
 									let  perm = chnnl.addPermission(config.optionName);
 									if (Boolean(perm)) {
 										perm.setValue(config.optionValue);
