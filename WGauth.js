@@ -400,7 +400,7 @@ function setPermission(wgid, uid) {
 		}
 		
 		// Check if client enter  clan channel
-		if (dbc) dbc.query("SELECT * FROM wgchannels WHERE clanid ='"+clan.clan_id+"'", function(err, res) {
+		if (dbc) dbc.query("SELECT * FROM wgchannels", function(err, res) {
 			if (!err) {
 				res.forEach( row => {
 					if ( toChannel.id() == row.channelid) {
