@@ -458,7 +458,7 @@ function setPermission(wgid, uid) {
 															if ( row.wgid == id ) {
 																auth = true;
 																let clnt = backend.getClientByUID(row.uid);
-																if (Boolean(clnt)) {
+																if (!!clnt) {
 																	channel_desc += ("[color=green]"+clan.members[id].account_name+" - Registred - "+clnt.name()+" - "+clnt.getChannels()[0].name()+"[/color]\n");
 																} else {
 																	offline.push(id);
