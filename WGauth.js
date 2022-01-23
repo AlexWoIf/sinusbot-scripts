@@ -399,12 +399,12 @@ function setPermission(wgid, uid) {
 			return;
 		}
 		
-		// Check if client enter  clan channel
+		// Check if client enter clan channel
 		if (dbc) dbc.query("SELECT * FROM wgchannels", function(err, res) {
 			if (!err) {
 				engine.log(toChannel.id());
 				res.forEach( row => {
-					engine.log(row.channelid);
+					engine.log(parseString(row.channelid));
 					if ( toChannel.id() == parseString(row.channelid)) {
 						let clanid = parseString(row.clanid);
 						let hq = backend.getChannelByID(parseString(row.hq));
@@ -418,63 +418,65 @@ function setPermission(wgid, uid) {
 						if (dbc) dbc.query("SELECT p.access_token AS token FROM wgchannels AS c, wgplayers as p WHERE c.channelid='+toChannel.id()+' AND c.clanid=p.clanid AND p.uid='"+client.uid()+"'", function(err, res) {
 							if (!err) {
 								// Request online clan members from WG API
-								let token = parseString(res[0].token);
-								if (Boolean(token)) {
-									http.simpleRequest({
-										'method': 'GET',
-				//						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id="+clanid+"&access_token="+token+"&extra=private.online_members&fields=private.online_members",
-										'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id="+clanid+"&access_token="+token+"&extra=private.online_members&fields=private.online_members%2C+members%2C+tag%2C+name%2C+emblems.x64&members_key=id",
-									'timeout': 6000,
-									}, function (error, response) {
-										if (error) {
-												engine.log("Error: " + error);
-												return;
-										}
-										if (response.statusCode != 200) {
-											engine.log("HTTP Error: " + response.status);
-											return;
-										}
-										// success!
-										let mydata = JSON.parse(response.data);
-										//engine.log(mydata.data);
-										let clan = mydata.data[clanid];
-										if (dbc) dbc.query("SELECT uid, wgid FROM wgplayers WHERE clanid="+clanid, function(err, res) {
-											if (!err) {
-												let tsclan = [];
-												res.forEach( row => {
-													let wgid = parseString(row.wgid);
-													let uid = parseString(row.uid);
-													tsclan.push({wgid:wgid,uid:uid});
-												});
-												//engine.log(tsclan);
-												let channel_desc = "[center][size=12]Online("+clan.private.online_members.length+"):[/size]\n"+
-												"WoT nickname - Authorized - Nick - Channel\n";
-												let notAuth = [];
-												let offline = [];
-												clan.private.online_members.forEach( id => {
-													let auth = false;
-													tsclan.forEach( row => {
-														if ( row.wgid == id ) {
-															auth = true;
-															let clnt = backend.getClientByUID(row.uid);
-															if (Boolean(clnt)) {
-																channel_desc += ("[color=green]"+clan.members[id].account_name+" - Registred - "+clnt.name()+" - "+clnt.getChannels()[0].name()+"[/color]\n");
-															} else {
-																offline.push(id);
-																channel_desc += ("[color=red]"+clan.members[id].account_name+" - Registred - "+clnt.name()+" - Not connected[/color]\n");
-															}
-														}											
-													});
-													if ( !auth ) {
-														notAuth.push(id);
-														channel_desc += ("[color=black]"+clan.members[id].account_name+" - Not registred - Unknown - Not connected[/color]\n");
-													}
-												});
-												channel_desc += "[/center]";
-												hq.setDescription(channel_desc);
+								if (Boolean(res)) {
+									let token = parseString(res[0].token);
+									if (Boolean(token)) {
+										http.simpleRequest({
+											'method': 'GET',
+					//						'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id="+clanid+"&access_token="+token+"&extra=private.online_members&fields=private.online_members",
+											'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id="+clanid+"&access_token="+token+"&extra=private.online_members&fields=private.online_members%2C+members%2C+tag%2C+name%2C+emblems.x64&members_key=id",
+										'timeout': 6000,
+										}, function (error, response) {
+											if (error) {
+													engine.log("Error: " + error);
+													return;
 											}
+											if (response.statusCode != 200) {
+												engine.log("HTTP Error: " + response.status);
+												return;
+											}
+											// success!
+											let mydata = JSON.parse(response.data);
+											//engine.log(mydata.data);
+											let clan = mydata.data[clanid];
+											if (dbc) dbc.query("SELECT uid, wgid FROM wgplayers WHERE clanid="+clanid, function(err, res) {
+												if (!err) {
+													let tsclan = [];
+													res.forEach( row => {
+														let wgid = parseString(row.wgid);
+														let uid = parseString(row.uid);
+														tsclan.push({wgid:wgid,uid:uid});
+													});
+													//engine.log(tsclan);
+													let channel_desc = "[center][size=12]Online("+clan.private.online_members.length+"):[/size]\n"+
+													"WoT nickname - Authorized - Nick - Channel\n";
+													let notAuth = [];
+													let offline = [];
+													clan.private.online_members.forEach( id => {
+														let auth = false;
+														tsclan.forEach( row => {
+															if ( row.wgid == id ) {
+																auth = true;
+																let clnt = backend.getClientByUID(row.uid);
+																if (Boolean(clnt)) {
+																	channel_desc += ("[color=green]"+clan.members[id].account_name+" - Registred - "+clnt.name()+" - "+clnt.getChannels()[0].name()+"[/color]\n");
+																} else {
+																	offline.push(id);
+																	channel_desc += ("[color=red]"+clan.members[id].account_name+" - Registred - "+clnt.name()+" - Not connected[/color]\n");
+																}
+															}											
+														});
+														if ( !auth ) {
+															notAuth.push(id);
+															channel_desc += ("[color=black]"+clan.members[id].account_name+" - Not registred - Unknown - Not connected[/color]\n");
+														}
+													});
+													channel_desc += "[/center]";
+													hq.setDescription(channel_desc);
+												}
+											});
 										});
-									});
+									}
 								}
 							}
 						});
