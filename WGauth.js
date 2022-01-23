@@ -237,7 +237,7 @@ function setPermission(wgid, uid) {
 		let mydata = JSON.parse(response.data);
 		if ( Boolean(mydata.data[wgid])) {
 			let name = mydata.data[wgid].account_name;
-			let clan = mydata.data[wgid].clan;
+			let clan = (mydata.data[wgid].clan)? mydata.data[wgid].clan : 0;
 			let role = mydata.data[wgid].role;
 
 			// Search in database channel ID by clanID
