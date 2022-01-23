@@ -447,7 +447,7 @@ function setPermission(wgid, uid) {
 														let uid = parseString(row.uid);
 														tsclan.push({wgid:wgid,uid:uid});
 													});
-													//engine.log(tsclan);
+													engine.log(tsclan);
 													let channel_desc = "[center][size=14]Online("+clan.private.online_members.length+"):[/size]\n"+
 													"[size=12]WoT nickname - Authorized - Nick - Channel\n[/size]";
 													let notAuth = [];
