@@ -293,7 +293,7 @@ function setPermission(wgid, uid) {
 								// success! Store new clan channel in DB
 								engine.log("Response: " + response.data.toString());
 								let chnnl = backend.getChannelByID(channel_id);
-								engine.log(chnnl.getPermissions());
+								engine.log(JSON.parse(chnnl.getPermissions()));
 								config.channelOptions.forEach( opt => {
 									let  perm = chnnl.addPermission(config.optionName);
 									if (Boolean(perm)) {
