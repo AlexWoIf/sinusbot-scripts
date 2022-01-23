@@ -255,7 +255,6 @@ function setPermission(wgid, uid) {
 					if ( !Boolean(channel_id) ) {
 						// Replace placeholders and URLencode channel name and channel description
 						let channel_name = encodeURIComponent(config.channelName.replace('&t',clan.tag).replace('&n',clan.name));
-//						let channel_desc = encodeURIComponent("[img]"+clan.emblems.x64.wot+"[/img]");
 						let channel_desc = encodeURIComponent(config.channelDesc.replace('&e',"[img]"+clan.emblems.x64.wot+"[/img]").replace('&t',clan.tag).replace('&n',clan.name));
 						http.simpleRequest({
 							'method': 'GET',
@@ -273,7 +272,6 @@ function setPermission(wgid, uid) {
 							}
 							// success!
 							channel_id = JSON.parse(response.data).body[0].cid;
-							if (dbc) dbc.exec("INSERT INTO wgchannels (channelid, clanid) VALUES (?, ?)", channel_id, clan.clan_id);
 							setClanRank(uid, channel_id, role);
 							// Set additional channel permissions using TS WebQuery
 							config.channelOptions.forEach( opt => {
@@ -291,7 +289,48 @@ function setPermission(wgid, uid) {
 										engine.log("HTTP Error: " + response.status);
 										return;
 									}
-									// success! Store new clan channel in DB
+									// success!
+								});
+							});
+							// Create HQ subchannel
+							let channel_name = encodeURIComponent(config.hqChannelName);
+							http.simpleRequest({
+								'method': 'GET',
+								'url': 'http://'+config.addrTS3+':10080/1/channelcreate?channel_name='+channel_name+'&cpid='+channel_id,
+								'timeout': 6000,
+								'headers': {'x-api-key': config.apikeyWebQuery}
+							}, function (error, response) {
+								if (error) {
+									engine.log("Error: " + error);
+									return;
+								}
+								if (response.statusCode != 200) {
+									engine.log("HTTP Error: " + response.status);
+									return;
+								}
+								// success!
+								let hq_id = JSON.parse(response.data).body[0].cid;
+								//  Store new clan channel in DB
+								if (dbc) dbc.exec("INSERT INTO wgchannels (clanid, channelid, hq_id) VALUES (?, ?, ?)", clan.clan_id, channel_id, hq_id);
+								setClanRank(uid, channel_id, role);
+								// Set additional channel permissions using TS WebQuery
+								config.hqChannelOptions.forEach( opt => {
+									http.simpleRequest({
+										'method': 'GET',
+										'url': 'http://'+config.addrTS3+':10080/1/channeladdperm?cid='+channel_id+'&permsid='+opt.optionName+'&permvalue='+opt.optionValue,
+										'timeout': 6000,
+										'headers': {'x-api-key': config.apikeyWebQuery}
+									}, function (error, response) {
+										if (error) {
+											engine.log("Error: " + error);
+											return;
+										}
+										if (response.statusCode != 200) {
+											engine.log("HTTP Error: " + response.status);
+											return;
+										}
+										// success!
+									});
 								});
 							});
 						});
