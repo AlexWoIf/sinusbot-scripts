@@ -48,28 +48,23 @@ registerPlugin({
 				type: 'string'
 			}]
 		}, {
-			name: 'subChannels',
+			name: 'hqChannelName',
 			indent: 2,
-			title: 'Create subchannels',
+			title: 'Channel name format (placeholders: &t-clan TAG, &n-clan name)',
+			type: 'string',
+		}, {
+			name: 'hqChannelOptions',
+			indent: 2,
+			title: 'HQ subchannel options',
 			type: 'array',
 			vars: [{
-				name: 'subchannelName',
-				title: 'Subchannel name',
+				name: 'optionName',
+				title: 'Permission name (string like i_channel_needed_join_power)',
 				type: 'string'
 			},{
-				name: 'subChannelOptions',
-				indent: 2,
-				title: 'Channel options for subchannel',
-				type: 'array',
-				vars: [{
-					name: 'optionName',
-					title: 'Permission name (string like i_channel_needed_join_power)',
-					type: 'string'
-				},{
-					name: 'optionValue',
-					title: 'Permission value',
-					type: 'string'
-				}]
+				name: 'optionValue',
+				title: 'Permission value',
+				type: 'string'
 			}]
 	}, {
 		name: 'tsdata',
@@ -256,7 +251,7 @@ function setPermission(wgid, uid) {
 					if (res.length == 1) {
 						channel_id = parseString(res[0].channelid);
 					}
-					// Create channel if not exist
+					// Create channel if not exist using TS WebQuery
 					if ( !Boolean(channel_id) ) {
 						// Replace placeholders and URLencode channel name and channel description
 						let channel_name = encodeURIComponent(config.channelName.replace('&t',clan.tag).replace('&n',clan.name));
@@ -278,7 +273,12 @@ function setPermission(wgid, uid) {
 							}
 							// success!
 							channel_id = JSON.parse(response.data).body[0].cid;
-							http.simpleRequest({
+							if (dbc) dbc.exec("INSERT INTO wgchannels (channelid, clanid) VALUES (?, ?)", channel_id, clan.clan_id);
+							setClanRank(uid, channel_id, role);
+							// Set additional channel permissions using TS WebQuery (!!! replace this with sinusbot methods !!!)
+							let chnnl = backend.getChannelByID(channel_id);
+							
+/*							http.simpleRequest({
 								'method': 'GET',
 								'url': 'http://'+config.addrTS3+':10080/1/channeladdperm?cid='+channel_id+'&permsid=i_channel_needed_join_power&permvalue=55',
 								'timeout': 6000,
@@ -294,10 +294,8 @@ function setPermission(wgid, uid) {
 								}
 								// success! Store new clan channel in DB
 								engine.log("Response: " + response.data.toString());
-								setClanRank(uid, channel_id, role);
-								if (dbc) dbc.exec("INSERT INTO wgchannels (channelid, clanid) VALUES (?, ?)", channel_id, clan.clan_id);
 							});
-						});
+*/						});
 					} else {
 						setClanRank(uid, channel_id, role);
 					}
