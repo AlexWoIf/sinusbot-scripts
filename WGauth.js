@@ -478,7 +478,7 @@ function setPermission(wgid, uid) {
 						});
 						return;
 					}
-				}
+				});
 			}
 		}
 		return;
