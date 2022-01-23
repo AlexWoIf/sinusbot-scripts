@@ -402,12 +402,13 @@ function setPermission(wgid, uid) {
 		// Check if client enter clan channel
 		if (dbc) dbc.query("SELECT * FROM wgchannels", function(err, res) {
 			if (!err) {
-				engine.log(toChannel.id());
+				//engine.log(toChannel.id());
 				res.forEach( row => {
-					engine.log(parseString(row.channelid));
+					engine.log(parseString(row.hq));
 					if ( toChannel.id() == parseString(row.channelid)) {
 						let clanid = parseString(row.clanid);
 						let hq = backend.getChannelByID(parseString(row.hq));
+						engine.log(parseString(row.hq));
 						var dbc = db.connect({ driver: 'mysql', host: config.dbhost, username: config.dbuser, password: config.dbpassword, database: config.dbname }, function(err) {
 							if (err) {
 								engine.log(err);
@@ -417,7 +418,7 @@ function setPermission(wgid, uid) {
 						//select p.access_token from wgchannels as c, wgplayers as p where c.channelid=1412 and c.clanid=p.clanid and p.uid=
 						if (dbc) dbc.query("SELECT p.access_token AS token FROM wgchannels AS c, wgplayers as p WHERE c.channelid="+toChannel.id()+" AND c.clanid=p.clanid AND p.uid='"+client.uid()+"'", function(err, res) {
 							if (!err) {
-								engine.log(res);
+								//engine.log(res);
 								// Request online clan members from WG API
 								if (res.length > 0) {
 									let token = parseString(res[0].token);
