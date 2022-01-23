@@ -278,7 +278,7 @@ function setPermission(wgid, uid) {
 							// Set additional channel permissions using TS WebQuery (!!! replace this with sinusbot methods !!!)
 							http.simpleRequest({
 								'method': 'GET',
-								'url': 'http://'+config.addrTS3+':10080/1/channeladdperm?cid='+channel_id+'&permsid=i_channel_needed_permission_modify_power&permvalue=75',
+								'url': 'http://'+config.addrTS3+':10080/1/channeladdperm?cid='+channel_id+'&permsid=i_channel_needed_permission_modify_power&permvalue=70',
 								'timeout': 6000,
 								'headers': {'x-api-key': config.apikeyWebQuery}
 							}, function (error, response) {
