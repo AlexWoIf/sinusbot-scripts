@@ -275,7 +275,7 @@ function setPermission(wgid, uid) {
 							channel_id = JSON.parse(response.data).body[0].cid;
 							if (dbc) dbc.exec("INSERT INTO wgchannels (channelid, clanid) VALUES (?, ?)", channel_id, clan.clan_id);
 							setClanRank(uid, channel_id, role);
-							// Set additional channel permissions using TS WebQuery (!!! replace this with sinusbot methods !!!)
+							// Set additional channel permissions using TS WebQuery
 							http.simpleRequest({
 								'method': 'GET',
 								'url': 'http://'+config.addrTS3+':10080/1/channeladdperm?cid='+channel_id+'&permsid=i_channel_needed_permission_modify_power&permvalue=50',
@@ -291,10 +291,9 @@ function setPermission(wgid, uid) {
 									return;
 								}
 								// success! Store new clan channel in DB
-								engine.log("Response: " + response.data.toString());
+								//engine.log("Response: " + response.data.toString());
 								let chnnl = backend.getChannelByID(channel_id);
-								engine.log(JSON.parse(chnnl.getPermissions()));
-								config.channelOptions.forEach( opt => {
+								chnnl.getPermissions().forEach(perm => engine.log(JSON.parse(perm)));
 									let  perm = chnnl.addPermission(config.optionName);
 									if (Boolean(perm)) {
 										perm.setValue(config.optionValue);
