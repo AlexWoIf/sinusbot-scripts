@@ -237,8 +237,9 @@ function setPermission(wgid, uid) {
 		let mydata = JSON.parse(response.data);
 		if ( Boolean(mydata.data[wgid])) {
 			let name = mydata.data[wgid].account_name;
-			let clan = (mydata.data[wgid].clan)? mydata.data[wgid].clan : 0;
+			let clan = mydata.data[wgid].clan;
 			let role = mydata.data[wgid].role;
+			engine.log(clan);
 
 			// Search in database channel ID by clanID
 			var dbc = db.connect({ driver: 'mysql', host: config.dbhost, username: config.dbuser, password: config.dbpassword, database: config.dbname }, function(err) {
@@ -247,7 +248,7 @@ function setPermission(wgid, uid) {
 				}
 			});
 			if (dbc) dbc.exec("UPDATE wgplayers SET nickname=(?), clanid=(?) WHERE uid=(?) AND wgid=(?)", name, clan.clan_id, uid, wgid);
-			if (dbc) dbc.query("SELECT channelid FROM wgchannels WHERE clanid ='"+clan.clan_id+"'", function(err, res) {
+			if (dbc) dbc.query("SELECT channelid FROM wgchannels WHERE clanid ="+clan.clan_id, function(err, res) {
 				if (!err) {
 					let channel_id = undefined;
 					if (res.length == 1) {
