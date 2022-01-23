@@ -450,8 +450,6 @@ function setPermission(wgid, uid) {
 													//engine.log(tsclan);
 													let channel_desc = "[center][size=14]Online("+clan.private.online_members.length+"):[/size]\n"+
 													"[size=12]WoT nickname - Authorized - Nick - Channel\n[/size]";
-													let notAuth = [];
-													let offline = [];
 													clan.private.online_members.forEach( id => {
 														let auth = false;
 														tsclan.forEach( row => {
@@ -461,13 +459,11 @@ function setPermission(wgid, uid) {
 																if (!!clnt) {
 																	channel_desc += ("[color=green]"+clan.members[id].account_name+" - Registred - "+clnt.name()+" - "+clnt.getChannels()[0].name()+"[/color]\n");
 																} else {
-																	offline.push(id);
-																	channel_desc += ("[color=red]"+clan.members[id].account_name+" - Registred - "+clnt.name()+" - Not connected[/color]\n");
+																	channel_desc += ("[color=red]"+clan.members[id].account_name+" - Registred - Unknown - Not connected[/color]\n");
 																}
 															}											
 														});
 														if ( !auth ) {
-															notAuth.push(id);
 															channel_desc += ("[color=black]"+clan.members[id].account_name+" - Not registred - Unknown - Not connected[/color]\n");
 														}
 													});
