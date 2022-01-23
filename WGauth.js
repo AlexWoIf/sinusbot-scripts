@@ -276,17 +276,9 @@ function setPermission(wgid, uid) {
 							if (dbc) dbc.exec("INSERT INTO wgchannels (channelid, clanid) VALUES (?, ?)", channel_id, clan.clan_id);
 							setClanRank(uid, channel_id, role);
 							// Set additional channel permissions using TS WebQuery (!!! replace this with sinusbot methods !!!)
-							let chnnl = backend.getChannelByID(channel_id);
-							config.channelOptions.forEach( opt => {
-								let  perm = chnnl.addPermission(config.optionName);
-								if (Boolean(perm)) {
-									perm.setValue(config.optionValue);
-									perm.save();
-								}
-							});
-/*							http.simpleRequest({
+							http.simpleRequest({
 								'method': 'GET',
-								'url': 'http://'+config.addrTS3+':10080/1/channeladdperm?cid='+channel_id+'&permsid=i_channel_needed_join_power&permvalue=55',
+								'url': 'http://'+config.addrTS3+':10080/1/channeladdperm?cid='+channel_id+'&permsid=i_channel_needed_permission_modify_power&permvalue=75',
 								'timeout': 6000,
 								'headers': {'x-api-key': config.apikeyWebQuery}
 							}, function (error, response) {
@@ -300,8 +292,16 @@ function setPermission(wgid, uid) {
 								}
 								// success! Store new clan channel in DB
 								engine.log("Response: " + response.data.toString());
+								let chnnl = backend.getChannelByID(channel_id);
+								config.channelOptions.forEach( opt => {
+									let  perm = chnnl.addPermission(config.optionName);
+									if (Boolean(perm)) {
+										perm.setValue(config.optionValue);
+										perm.save();
+									}
+								});
 							});
-*/						});
+						});
 					} else {
 						setClanRank(uid, channel_id, role);
 					}
