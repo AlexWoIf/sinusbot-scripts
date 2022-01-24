@@ -248,7 +248,7 @@ function (sinusbot, config) {
                 let name = mydata.data[wgid].account_name;
                 let clan = mydata.data[wgid].clan;
                 let role = mydata.data[wgid].role;
-                engine.log(clan);
+                //engine.log(clan);
 
                 // Search in database channel ID by clanID
                 var dbc = db.connect({
