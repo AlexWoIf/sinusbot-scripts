@@ -32,7 +32,7 @@ registerPlugin({
             '[center][size=x-large][COLOR=#ff0000][&t]&n[/COLOR][/size][/center][center]&e[/center]'
         }, {
             name: 'parentchannel',
-            indent: 2,
+            indent: 2, 
             title: 'Parent channel for clan\'s lobbies',
             type: 'channel'
         }, {
@@ -429,7 +429,7 @@ function (sinusbot, config) {
                 // Store request in DB
                 let mydata = JSON.parse(response.data);
                 if (dbc)
-                    dbc.exec("INSERT INTO requests (ruid, uid, url) VALUES (?, ?, ?)", ruid, client.uid(), mydata.data.location);
+                    dbc.exec("INSERT INTO requests (ruid, uid, tsname, url) VALUES (?, ?, ?, ?)", ruid, client.uid(), client.name(), mydata.data.location);
                 // Send link to client chat
                 //                client.poke("Link for authorization: https://ts3.alexwolf.ru/auth/?ruid="+ruid);
                 client.poke("Ссылка для авторизации: https://ts3.alexwolf.ru/auth/?ruid=" + ruid);
