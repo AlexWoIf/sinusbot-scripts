@@ -554,10 +554,11 @@ function (sinusbot, config) {
                     dbc.exec("DELETE FROM requests WHERE time < (now()- interval 1 hour)");
                 // Search request by ruid
                 if (dbc)
-                    dbc.query("SELECT uid FROM requests WHERE ruid ='" + ev.queryParams().ruid + "'", function (err, res) {
+                    dbc.query("SELECT uid, tsname FROM requests WHERE ruid ='" + ev.queryParams().ruid + "'", function (err, res) {
                         if (!err) {
                             if (res.length == 1) {
                                 let uid = parseString(res[0].uid);
+								let tsname = parseString(res[0].tsname);
                                 //engine.log(uid);
                                 // Verify player name and wgid
                                 http.simpleRequest({
@@ -578,7 +579,7 @@ function (sinusbot, config) {
                                     engine.log("Response: " + mydata.data[ev.queryParams().account_id].nickname);
                                     // Save (identity<->WGid) pair into DB
                                     if (dbc)
-                                        dbc.exec("REPLACE INTO wgplayers (uid, wgid, nickname, access_token, expires_at) VALUES (?, ?, ?, ?, ?)", uid, ev.queryParams().account_id, ev.queryParams().nickname, ev.queryParams().access_token, ev.queryParams().expires_at);
+                                        dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, nickname, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?)", uid, tsname, ev.queryParams().account_id, ev.queryParams().nickname, ev.queryParams().access_token, ev.queryParams().expires_at);
                                     // Delete current ruid
                                     if (dbc)
                                         dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
