@@ -422,7 +422,8 @@ function (sinusbot, config) {
                 });
             return;
         }
-*/        // If client enter Auth channel
+*/
+        // If client enter Auth channel
         if (toChannel.id() == config.authchannel) {
             // Generate auth link via send request
             let ruid = crypto.randomBytes(16).toHex();
