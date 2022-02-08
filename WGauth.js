@@ -391,7 +391,7 @@ function (sinusbot, config) {
                 engine.log(err);
             }
         });
-        // If client just connect to server
+/*        // If client just connect to server
         if (!Boolean(fromChannel)) {
             // Search player by uid
             if (dbc)
@@ -401,13 +401,28 @@ function (sinusbot, config) {
                             let wgid = parseString(row.wgid);
                             setPermission(wgid, client.uid());
                             // Update access_token
-                            // ...
+							http.simpleRequest({
+								'method': 'POST',
+								'url': wgAPIurl + "auth/prolongate/",
+								'timeout': 6000,
+								'body': "application_id=" + applicationID + "&expires_at=" + timeExtension + "&access_token=" + token,
+							}, function (error, response) {
+								if (error) {
+									engine.log("Error: " + error);
+									return;
+								}
+								if (response.statusCode != 200) {
+									engine.log("HTTP Error: " + response.status);
+									return;
+								}
+								// success!
+
                         });
                     }
                 });
             return;
         }
-        // If client enter Auth channel
+*/        // If client enter Auth channel
         if (toChannel.id() == config.authchannel) {
             // Generate auth link via send request
             let ruid = crypto.randomBytes(16).toHex();
@@ -431,7 +446,7 @@ function (sinusbot, config) {
                 if (dbc)
                     dbc.exec("INSERT INTO requests (ruid, uid, tsname, url) VALUES (?, ?, ?, ?)", ruid, client.uid(), client.name(), mydata.data.location);
                 // Send link to client chat
-                //                client.poke("Link for authorization: https://ts3.alexwolf.ru/auth/?ruid="+ruid);
+                //client.poke("Link for authorization: https://ts3.alexwolf.ru/auth/?ruid="+ruid);
                 client.poke("Ссылка для авторизации: https://ts3.alexwolf.ru/auth/?ruid=" + ruid);
             });
             return;
