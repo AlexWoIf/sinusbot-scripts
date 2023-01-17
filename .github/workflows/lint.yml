@@ -12,3 +12,5 @@ jobs:
     steps:
         - uses: actions/checkout@v2
         - uses: docker://github/super-linter:v2.1.0
+          env:
+            VALIDATE_JAVASCRIPT_ES: true
