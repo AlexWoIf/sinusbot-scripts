@@ -1,3 +1,4 @@
+/* global registerPlugin */
 registerPlugin({
     name: 'Scripts reloader',
     version: '1.0a',
