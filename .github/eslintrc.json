@@ -1,5 +1,0 @@
-{
-  "extends": ["standard", "standard-jsx"]
-  "globals": ["registerPlugin"]
-  "indent": ["error", 4]
-}
