@@ -133,9 +133,9 @@ registerPlugin({
                     title: 'DB name',
                     indent: 2,
                     type: 'string'
-                }
-            }
-        ]
+                }]
+        }]
+        
     },
 
         function (sinusbot, config) {
