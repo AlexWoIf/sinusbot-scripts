@@ -140,7 +140,7 @@ registerPlugin({
 
 },
 
-    function (sinusbot, config) {
+function (sinusbot, config) {
     const event = require('event');
     const http = require('http');
     const crypto = require('crypto');
@@ -149,8 +149,12 @@ registerPlugin({
     const db = require('db');
     const helpers = require('helpers');
 
-    const realms = ['ru', 'eu', 'com', 'asia'];
-    const wgAPIurl = 'https://api.worldoftanks.' + realms[config.realm] + '/wot/';
+    const wgAPIurl = [
+        'https://api.tanki.su/wot/',
+        'https://api.worldoftanks.eu/wot/',
+        'https://api.worldoftanks.com/wot/',
+        'https://api.worldoftanks.asia/wot/'
+    ];
 
     function parseString(numberBuffer) {
         if (!Array.isArray(numberBuffer))
@@ -378,6 +382,22 @@ registerPlugin({
                     });
             }
         });
+    }
+
+    function removeChannelFromDB(channel, invoker){
+        var dbc = db.connect({
+            driver: 'mysql',
+            host: config.dbhost,
+            username: config.dbuser,
+            password: config.dbpassword,
+            database: config.dbname
+        }, function (err) {
+            if (err) {
+                engine.log(err);
+            }
+        });
+        if (dbc)
+            dbc.exec("DELETE FROM wgchannels WHERE channelid = (?)", channel.id());
     }
 
     event.on('clientMove', ({
@@ -627,19 +647,5 @@ registerPlugin({
         };
     });
 
-    event.on('channelDelete', (channel, invoker) => {
-        var dbc = db.connect({
-            driver: 'mysql',
-            host: config.dbhost,
-            username: config.dbuser,
-            password: config.dbpassword,
-            database: config.dbname
-        }, function (err) {
-            if (err) {
-                engine.log(err);
-            }
-        });
-        if (dbc)
-            dbc.exec("DELETE FROM wgchannels WHERE channelid = (?)", channel.id());
-    });
+    event.on('channelDelete', removeChannelFromDB(channel, invoker));
 })
