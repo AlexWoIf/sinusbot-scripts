@@ -400,185 +400,7 @@ function (sinusbot, config) {
             dbc.exec("DELETE FROM wgchannels WHERE channelid = (?)", channel.id());
     }
 
-    event.on('clientMove', ({
-            client,
-            fromChannel,
-            toChannel
-        }) => {
-        if (toChannel == undefined) {
-            return;
-        }
-        var dbc = db.connect({
-            driver: 'mysql',
-            host: config.dbhost,
-            username: config.dbuser,
-            password: config.dbpassword,
-            database: config.dbname
-        }, function (err) {
-            if (err) {
-                engine.log(err);
-            }
-        });
-        /*        // If client just connect to server
-        if (!Boolean(fromChannel)) {
-        // Search player by uid
-        if (dbc)
-        dbc.query("SELECT wgid FROM wgplayers WHERE uid ='" + client.uid() + "'", function (err, res) {
-        if (!err) {
-        res.forEach(row => {
-        let wgid = parseString(row.wgid);
-        setPermission(wgid, client.uid());
-        // Update access_token
-        http.simpleRequest({
-        'method': 'POST',
-        'url': wgAPIurl + "auth/prolongate/",
-        'timeout': 6000,
-        'body': "application_id=" + applicationID + "&expires_at=" + timeExtension + "&access_token=" + token,
-        }, function (error, response) {
-        if (error) {
-        engine.log("Error: " + error);
-        return;
-        }
-        if (response.statusCode != 200) {
-        engine.log("HTTP Error: " + response.status);
-        return;
-        }
-        // success!
-
-        });
-        }
-        });
-        return;
-        }
-         */
-        // If client enter Auth channel
-        if (toChannel.id() == config.authchannel) {
-            // Generate auth link via send request
-            let ruid = crypto.randomBytes(16).toHex();
-            let initURL = wgAPIurl + 'auth/login/?application_id=' + config.WGapiID + '&nofollow=1&redirect_uri=https%3A%2F%2Fsinusbot.alexwolf.ru%2Fauth%2FWGanswer%3Fruid=' + ruid;
-            http.simpleRequest({
-                'method': 'GET',
-                'url': initURL,
-                'timeout': 6000,
-            }, function (error, response) {
-                if (error) {
-                    engine.log("Error: " + error);
-                    return;
-                }
-                if (response.statusCode != 200) {
-                    engine.log("HTTP Error: " + response.status);
-                    return;
-                }
-                // success!
-                // Store request in DB
-                let mydata = JSON.parse(response.data);
-                if (dbc)
-                    dbc.exec("INSERT INTO requests (ruid, uid, tsname, url) VALUES (?, ?, ?, ?)", ruid, client.uid(), client.name(), mydata.data.location);
-                // Send link to client chat
-                //client.poke("Link for authorization: https://ts3.alexwolf.ru/auth/?ruid="+ruid);
-                client.poke("Ссылка для авторизации: https://ts3.alexwolf.ru/auth/?ruid=" + ruid);
-            });
-            return;
-        }
-
-        // Check if client enter clan channel
-        if (dbc)
-            dbc.query("SELECT * FROM wgchannels", function (err, res) {
-                if (!err) {
-                    //engine.log(toChannel.id());
-                    res.forEach(row => {
-                        if (toChannel.id() == parseString(row.channelid)) {
-                            let clanid = parseString(row.clanid);
-                            let hq = backend.getChannelByID(parseString(row.hq));
-                            var dbc = db.connect({
-                                driver: 'mysql',
-                                host: config.dbhost,
-                                username: config.dbuser,
-                                password: config.dbpassword,
-                                database: config.dbname
-                            }, function (err) {
-                                if (err) {
-                                    engine.log(err);
-                                }
-                            });
-                            // Search player by uid
-                            //select p.access_token from wgchannels as c, wgplayers as p where c.channelid=1412 and c.clanid=p.clanid and p.uid=
-                            if (dbc)
-                                dbc.query("SELECT p.access_token AS token FROM wgchannels AS c, wgplayers as p WHERE c.channelid=" + toChannel.id() + " AND c.clanid=p.clanid AND p.uid='" + client.uid() + "'", function (err, res) {
-                                    if (!err) {
-                                        //engine.log(res);
-                                        // Request online clan members from WG API
-                                        if (res.length > 0) {
-                                            let token = parseString(res[0].token);
-                                            if (Boolean(token)) {
-                                                http.simpleRequest({
-                                                    'method': 'GET',
-                                                    //                        'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id="+config.WGapiID+"&clan_id="+clanid+"&access_token="+token+"&extra=private.online_members&fields=private.online_members",
-                                                    'url': "https://api.worldoftanks.ru/wot/clans/info/?application_id=" + config.WGapiID + "&clan_id=" + clanid + "&access_token=" + token + "&extra=private.online_members&fields=private.online_members%2C+members%2C+tag%2C+name%2C+emblems.x64&members_key=id",
-                                                    'timeout': 6000,
-                                                }, function (error, response) {
-                                                    if (error) {
-                                                        engine.log("Error: " + error);
-                                                        return;
-                                                    }
-                                                    if (response.statusCode != 200) {
-                                                        engine.log("HTTP Error: " + response.status);
-                                                        return;
-                                                    }
-                                                    // success!
-                                                    let mydata = JSON.parse(response.data);
-                                                    //engine.log(mydata.data);
-                                                    let clan = mydata.data[clanid];
-                                                    if (dbc)
-                                                        dbc.query("SELECT uid, wgid FROM wgplayers WHERE clanid=" + clanid, function (err, res) {
-                                                            if (!err) {
-                                                                let tsclan = [];
-                                                                res.forEach(row => {
-                                                                    let wgid = parseString(row.wgid);
-                                                                    let uid = parseString(row.uid);
-                                                                    tsclan.push({
-                                                                        wgid: wgid,
-                                                                        uid: uid
-                                                                    });
-                                                                });
-                                                                //engine.log(tsclan);
-                                                                let channel_desc = "[center][size=14]Online(" + clan.private.online_members.length + "):[/size]\n" +
-                                                                    "[size=12]WoT nickname - Authorized - Nick - Channel\n[/size]";
-                                                                clan.private.online_members.forEach(id => {
-                                                                    let auth = false;
-                                                                    tsclan.forEach(row => {
-                                                                        if (row.wgid == id) {
-                                                                            auth = true;
-                                                                            let clnt = backend.getClientByUID(row.uid);
-                                                                            if (!!clnt) {
-                                                                                channel_desc += ("[color=green]" + clan.members[id].account_name + " - Registred - " + clnt.name() + " - " + clnt.getChannels()[0].name() + "[/color]\n");
-                                                                            } else {
-                                                                                channel_desc += ("[color=red]" + clan.members[id].account_name + " - Registred - Unknown - Not connected[/color]\n");
-                                                                            }
-                                                                        }
-                                                                    });
-                                                                    if (!auth) {
-                                                                        channel_desc += ("[color=black]" + clan.members[id].account_name + " - Not registred - Unknown - Not connected[/color]\n");
-                                                                    }
-                                                                });
-                                                                channel_desc += "[/center]";
-                                                                hq.setDescription(channel_desc);
-                                                            }
-                                                        });
-                                                });
-                                            }
-                                        }
-                                    }
-                                });
-                            return;
-                        }
-                    });
-                }
-            });
-        return;
-    });
-
-    event.on('public:WGanswer', ev => {
+    function checkWGanswer(ev){
         //    engine.log('Received public event from api!'+ev.queryParams().ruid);
         if (ev.queryParams().status == 'ok') {
             if (Boolean(ev.queryParams().ruid) && Boolean(ev.queryParams().account_id) && Boolean(ev.queryParams().nickname) && Boolean(ev.queryParams().access_token) && Boolean(ev.queryParams().expires_at)) {
@@ -645,7 +467,56 @@ function (sinusbot, config) {
         return {
             result: 'Auth fail'
         };
-    });
+    }
 
+    function generateAuthLink(client) {
+        var dbc = db.connect({
+            driver: 'mysql',
+            host: config.dbhost,
+            username: config.dbuser,
+            password: config.dbpassword,
+            database: config.dbname
+        }, function (err) {
+            if (err) {
+                engine.log(err);
+            }
+        });
+        // Generate auth link via send request
+        let ruid = crypto.randomBytes(16).toHex();
+        let initURL = wgAPIurl + 'auth/login/?application_id=' + config.WGapiID + '&nofollow=1&redirect_uri=https%3A%2F%2Fsinusbot.alexwolf.ru%2Fauth%2FWGanswer%3Fruid=' + ruid;
+        http.simpleRequest({
+            'method': 'GET',
+            'url': initURL,
+            'timeout': 6000,
+        }, function (error, response) {
+            if (error) {
+                engine.log("Error: " + error);
+                return;
+            }
+            if (response.statusCode != 200) {
+                engine.log("HTTP Error: " + response.status);
+                return;
+            }
+            // success!
+            // Store request in DB
+            let mydata = JSON.parse(response.data);
+            if (dbc)
+                dbc.exec("INSERT INTO requests (ruid, uid, tsname, url) VALUES (?, ?, ?, ?)", ruid, client.uid(), client.name(), mydata.data.location);
+            // Send link to client chat
+            //client.poke("Link for authorization: https://ts3.alexwolf.ru/auth/?ruid="+ruid);
+            client.poke("Ссылка для авторизации: https://ts3.alexwolf.ru/auth/?ruid=" + ruid);
+        });
+        return;
+    }
+
+    event.on('clientMove', ({client, fromChannel, toChannel}) => {
+        if (toChannel == undefined) {
+            return;
+        }
+        // If client enter Auth channel
+        if (toChannel.id() == config.authchannel)
+            generateAuthLink(client);
+    });
+    event.on('public:WGanswer', checkWGanswer(ev));
     event.on('channelDelete', removeChannelFromDB(channel, invoker));
 })
