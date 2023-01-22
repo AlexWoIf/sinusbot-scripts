@@ -45,16 +45,6 @@ registerPlugin({
             indent: 2,
             title: 'TeamSpeak WebQuery address',
             type: 'string'
-        }, {
-            name: 'cluster',
-            indent: 2,
-            title: 'Config for every regional cluster',
-            type: 'array',
-            vars: [{
-                    name: 'authchannel',
-                    indent: 0,
-                    title: 'Channel for WG auhorization',
-                    type: 'channel'
                 }, {
                     name: 'channeldata',
                     title: 'Parameters for creating new clan channel',
@@ -112,6 +102,16 @@ registerPlugin({
                             type: 'string'
                         }
                     ]
+        }, {
+            name: 'cluster',
+            indent: 2,
+            title: 'Config for every regional API',
+            type: 'array',
+            vars: [{
+                    name: 'authchannel',
+                    indent: 2,
+                    title: 'Channel for WG auhorization',
+                    type: 'channel'
                 }, {
                     name: 'wgdata',
                     title: 'Wargaming public API access data',
