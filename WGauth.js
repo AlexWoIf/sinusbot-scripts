@@ -384,22 +384,6 @@ function (sinusbot, config) {
         });
     }
 
-    function removeChannelFromDB(channel, invoker){
-        var dbc = db.connect({
-            driver: 'mysql',
-            host: config.dbhost,
-            username: config.dbuser,
-            password: config.dbpassword,
-            database: config.dbname
-        }, function (err) {
-            if (err) {
-                engine.log(err);
-            }
-        });
-        if (dbc)
-            dbc.exec("DELETE FROM wgchannels WHERE channelid = (?)", channel.id());
-    }
-
     function checkWGanswer(ev){
         //    engine.log('Received public event from api!'+ev.queryParams().ruid);
         if (ev.queryParams().status == 'ok') {
@@ -469,7 +453,7 @@ function (sinusbot, config) {
         };
     }
 
-    function generateAuthLink(client) {
+    function generateAuthLink(client, clusterConfig) {
         var dbc = db.connect({
             driver: 'mysql',
             host: config.dbhost,
@@ -479,6 +463,7 @@ function (sinusbot, config) {
         }, function (err) {
             if (err) {
                 engine.log(err);
+                throw err;
             }
         });
         // Generate auth link via send request
@@ -491,7 +476,7 @@ function (sinusbot, config) {
         }, function (error, response) {
             if (error) {
                 engine.log("Error: " + error);
-                return;
+                throw error;
             }
             if (response.statusCode != 200) {
                 engine.log("HTTP Error: " + response.status);
@@ -501,7 +486,8 @@ function (sinusbot, config) {
             // Store request in DB
             let mydata = JSON.parse(response.data);
             if (dbc)
-                dbc.exec("INSERT INTO requests (ruid, uid, tsname, url) VALUES (?, ?, ?, ?)", ruid, client.uid(), client.name(), mydata.data.location);
+                dbc.exec("INSERT INTO requests (ruid, uid, tsname, url) VALUES (?, ?, ?, ?)", 
+                     ruid, client.uid(), client.name(), mydata.data.location);
             // Send link to client chat
             //client.poke("Link for authorization: https://ts3.alexwolf.ru/auth/?ruid="+ruid);
             client.poke("Ссылка для авторизации: https://ts3.alexwolf.ru/auth/?ruid=" + ruid);
@@ -509,13 +495,32 @@ function (sinusbot, config) {
         return;
     }
 
+    function removeChannelFromDB(channel, invoker){
+        var dbc = db.connect({
+            driver: 'mysql',
+            host: config.dbhost,
+            username: config.dbuser,
+            password: config.dbpassword,
+            database: config.dbname
+        }, function (err) {
+            if (err) {
+                engine.log(err);
+                throw err;
+            }
+        });
+        if (dbc)
+            dbc.exec("DELETE FROM wgchannels WHERE channelid = (?)", channel.id());
+    }
+
     event.on('clientMove', ({client, fromChannel, toChannel}) => {
         if (toChannel == undefined) {
             return;
         }
         // If client enter Auth channel
-        if (toChannel.id() == config.authchannel)
-            generateAuthLink(client);
+        for (var i = 0; i < config.cluster.length; i++) {
+            if (toChannel.id() == config.cluster[i].authchannel)
+                generateAuthLink(client, config.cluster[i]);
+        }
     });
     event.on('public:WGanswer', checkWGanswer(ev));
     event.on('channelDelete', removeChannelFromDB(channel, invoker));
