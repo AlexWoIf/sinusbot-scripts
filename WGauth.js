@@ -473,7 +473,7 @@ function (sinusbot, config) {
             'method': 'GET',
             'url': initURL,
             'timeout': 6000,
-        }, function (error, response) {
+        }, function (error, response) {1230
             if (error) {
                 engine.log("Error: " + error);
                 throw error;
@@ -522,6 +522,6 @@ function (sinusbot, config) {
                 generateAuthLink(client, config.cluster[i]);
         }
     });
-    event.on('public:WGanswer', checkWGanswer(ev));
+    event.on('public:WGanswer', ev => checkWGanswer(ev));
     event.on('channelDelete', removeChannelFromDB(channel, invoker));
 })
