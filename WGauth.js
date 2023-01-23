@@ -523,5 +523,5 @@ function (sinusbot, config) {
         }
     });
     event.on('public:WGanswer', ev => checkWGanswer(ev));
-    event.on('channelDelete', (channel, invoker) => removeChannelFromDB(channel, invoker));
+    event.on('channelDelete', (channel, invoker) => {removeChannelFromDB(channel, invoker);});
 })
