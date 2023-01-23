@@ -11,9 +11,11 @@ jobs:
     name: SCP files to server
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@develop
+      - uses: actions/checkout@v3
+        with:
+          ref: develop
       - name: SCP files via ssh key
-        uses: appleboy/scp-action@develop
+        uses: appleboy/scp-action@master
         with:
           username: ${{ secrets.REMOTE_USER }}
           host: ${{ secrets.REMOTE_HOST }}
