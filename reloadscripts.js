@@ -14,8 +14,7 @@ registerPlugin({
 
     function (sinusbot, config) {
     const event = require('event');
-    const backend = require('backend');
-//    const engine = require('engine');
+    const engine = require('engine');
 
     event.on('public:' + config.eventName, function() {
         engine.reloadScripts();
