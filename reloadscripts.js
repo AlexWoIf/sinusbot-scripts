@@ -12,11 +12,11 @@ registerPlugin({
     ]
 },
 
-    function (sinusbot, config) {
+function (sinusbot, config) {
     const event = require('event');
     const engine = require('engine');
 
-    event.on('public:' + config.eventName, function() {
+    event.on('public:' + config.eventName, () => {
         engine.reloadScripts();
     });
 })

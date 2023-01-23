@@ -522,6 +522,6 @@ function (sinusbot, config) {
                 generateAuthLink(client, config.cluster[i]);
         }
     });
-    event.on('public:WGanswer', ev => checkWGanswer(ev));
-    event.on('channelDelete', (channel, invoker) => {removeChannelFromDB(channel, invoker);});
+    event.on('public:WGanswer', checkWGanswer);
+    event.on('channelDelete', removeChannelFromDB);
 })
