@@ -480,13 +480,17 @@ registerPlugin({
             }
             if (response.statusCode != 200) {
                 engine.log("HTTP Error: " + response.status);
-                return;
+                throw error;
             }
             // success!
             // Store request in DB
             engine.log(JSON.stringify(response.data, null, 4));
             engine.log(JSON.parse(response.data));
             let mydata = JSON.parse(response.data);
+            if (mydata.status=="error") {
+                engine.log(mydata.status);
+                throw mydata.status;
+            }
             if (dbc)
                 dbc.exec("INSERT INTO requests (ruid, uid, tsname, url) VALUES (?, ?, ?, ?)",
                     ruid, client.uid(), client.name(), mydata.data.location);
