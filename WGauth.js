@@ -467,8 +467,6 @@ registerPlugin({
         );
         // Generate auth link via send request
         let ruid = crypto.randomBytes(16).toHex();
-        engine.log(wgAPIurl);
-        return;
         let initURL = wgAPIurl[clusterConfig.realm] + 'auth/login/?application_id=' + clusterConfig.WGapiID + '&nofollow=1&redirect_uri=https%3A%2F%2Fsinusbot.alexwolf.ru%2Fauth%2FWGanswer%3Fruid=' + ruid;
         http.simpleRequest({
             'method': 'GET',
