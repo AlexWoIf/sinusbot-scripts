@@ -266,6 +266,7 @@ registerPlugin({
                 engine.log(mydata.error);
                 return;
             }
+            engine.log(mydata);
             if (Boolean(mydata.data[wgid])) {
                 let name = mydata.data[wgid].account_name;
                 let clan = mydata.data[wgid].clan;
