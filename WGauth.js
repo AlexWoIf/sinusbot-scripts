@@ -486,8 +486,8 @@ registerPlugin({
                 return;
             }
             if (dbc)
-                dbc.exec("INSERT INTO requests (ruid, uid, tsname, url) VALUES (?, ?, ?, ?)",
-                    ruid, client.uid(), client.name(), mydata.data.location);
+                dbc.exec("INSERT INTO requests (ruid, uid, tsname, realm, url) VALUES (?, ?, ?, ?, ?)",
+                    ruid, client.uid(), client.name(), clusterConfig.realm, mydata.data.location);
             // Send link to client chat
             client.poke("Ссылка для авторизации: https://ts3.alexwolf.ru/auth/?ruid=" + ruid);
         });
