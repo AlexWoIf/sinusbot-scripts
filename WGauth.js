@@ -270,7 +270,7 @@ registerPlugin({
                 let name = mydata.data[wgid].account_name;
                 let clan = mydata.data[wgid].clan;
                 let role = mydata.data[wgid].role;
-                //engine.log(clan);
+                engine.log(clan);
 
                 // Search in database channel ID by clanID
                 var dbc = db.connect(dbOptions, (err) => {
@@ -288,6 +288,7 @@ registerPlugin({
                             if (res.length == 1) {
                                 channel_id = parseString(res[0].channelid);
                             }
+/*
                             // Create channel if not exist using SinusBot methods
                             if (!Boolean(channel_id)) {
                                 // Replace placeholders and URLencode channel name and channel description
@@ -304,7 +305,7 @@ registerPlugin({
                                 channel_id = ch.id();
                                 setClanRank(uid, channel_id, role);
                             }
-/*
+*/
                             // Create channel if not exist using TS WebQuery
                             if (!Boolean(channel_id)) {
                                 // Replace placeholders and URLencode channel name and channel description
@@ -400,7 +401,7 @@ registerPlugin({
                             } else {
                                 setClanRank(uid, channel_id, role);
                             }
-*/
+
                         }
                     });
             }
