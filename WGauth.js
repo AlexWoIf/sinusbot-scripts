@@ -45,63 +45,63 @@ registerPlugin({
             indent: 2,
             title: 'TeamSpeak WebQuery address',
             type: 'string'
+        }, {
+            name: 'channeldata',
+            title: 'Parameters for creating new clan channel',
+        }, {
+            name: 'channelName',
+            indent: 2,
+            title: 'Channel name format (placeholders: &t-clan TAG, &n-clan name)',
+            type: 'string',
+        default:
+            '[&t]&n'
+        }, {
+            name: 'channelDesc',
+            indent: 2,
+            title: 'Channel description format (placeholders: &t-clan TAG, &n-clan name, &e-64x64 emblem)',
+            type: 'multiline',
+        default:
+            '[center][size=x-large][COLOR=#ff0000][&t]&n[/COLOR][/size][/center][center]&e[/center]'
+        }, {
+            name: 'parentchannel',
+            indent: 2,
+            title: 'Parent channel for clan\'s lobbies',
+            type: 'channel'
+        }, {
+            name: 'channelOptions',
+            indent: 2,
+            title: 'Channel options for clan\'s lobbies',
+            type: 'array',
+            vars: [{
+                    name: 'optionName',
+                    title: 'Permission name (string like i_channel_needed_join_power)',
+                    type: 'string'
                 }, {
-                    name: 'channeldata',
-                    title: 'Parameters for creating new clan channel',
+                    name: 'optionValue',
+                    title: 'Permission value',
+                    type: 'string'
+                }
+            ]
+        }, {
+            name: 'hqChannelName',
+            indent: 2,
+            title: 'Channel name for HQ subchannel',
+            type: 'string',
+        }, {
+            name: 'hqChannelOptions',
+            indent: 2,
+            title: 'HQ subchannel options',
+            type: 'array',
+            vars: [{
+                    name: 'optionName',
+                    title: 'Permission name (string like i_channel_needed_join_power)',
+                    type: 'string'
                 }, {
-                    name: 'channelName',
-                    indent: 2,
-                    title: 'Channel name format (placeholders: &t-clan TAG, &n-clan name)',
-                    type: 'string',
-                default:
-                    '[&t]&n'
-                }, {
-                    name: 'channelDesc',
-                    indent: 2,
-                    title: 'Channel description format (placeholders: &t-clan TAG, &n-clan name, &e-64x64 emblem)',
-                    type: 'multiline',
-                default:
-                    '[center][size=x-large][COLOR=#ff0000][&t]&n[/COLOR][/size][/center][center]&e[/center]'
-                }, {
-                    name: 'parentchannel',
-                    indent: 2,
-                    title: 'Parent channel for clan\'s lobbies',
-                    type: 'channel'
-                }, {
-                    name: 'channelOptions',
-                    indent: 2,
-                    title: 'Channel options for clan\'s lobbies',
-                    type: 'array',
-                    vars: [{
-                            name: 'optionName',
-                            title: 'Permission name (string like i_channel_needed_join_power)',
-                            type: 'string'
-                        }, {
-                            name: 'optionValue',
-                            title: 'Permission value',
-                            type: 'string'
-                        }
-                    ]
-                }, {
-                    name: 'hqChannelName',
-                    indent: 2,
-                    title: 'Channel name for HQ subchannel',
-                    type: 'string',
-                }, {
-                    name: 'hqChannelOptions',
-                    indent: 2,
-                    title: 'HQ subchannel options',
-                    type: 'array',
-                    vars: [{
-                            name: 'optionName',
-                            title: 'Permission name (string like i_channel_needed_join_power)',
-                            type: 'string'
-                        }, {
-                            name: 'optionValue',
-                            title: 'Permission value',
-                            type: 'string'
-                        }
-                    ]
+                    name: 'optionValue',
+                    title: 'Permission value',
+                    type: 'string'
+                }
+            ]
         }, {
             name: 'cluster',
             indent: 2,
@@ -140,7 +140,7 @@ registerPlugin({
 
 },
 
-function (sinusbot, config) {
+    function (sinusbot, config) {
     const event = require('event');
     const http = require('http');
     const crypto = require('crypto');
@@ -156,6 +156,13 @@ function (sinusbot, config) {
         'https://api.worldoftanks.asia/wot/'
     ];
 
+    var dbOptions = {
+        driver: 'mysql',
+        host: config.dbhost,
+        username: config.dbuser,
+        password: config.dbpassword,
+        database: config.dbname,
+    }
     function parseString(numberBuffer) {
         if (!Array.isArray(numberBuffer))
             return "";
@@ -384,7 +391,7 @@ function (sinusbot, config) {
         });
     }
 
-    function checkWGanswer(ev){
+    function checkWGanswer(ev) {
         //    engine.log('Received public event from api!'+ev.queryParams().ruid);
         if (ev.queryParams().status == 'ok') {
             if (Boolean(ev.queryParams().ruid) && Boolean(ev.queryParams().account_id) && Boolean(ev.queryParams().nickname) && Boolean(ev.queryParams().access_token) && Boolean(ev.queryParams().expires_at)) {
@@ -454,18 +461,14 @@ function (sinusbot, config) {
     }
 
     function generateAuthLink(client, clusterConfig) {
-        var dbc = db.connect({
-            driver: 'mysql',
-            host: config.dbhost,
-            username: config.dbuser,
-            password: config.dbpassword,
-            database: config.dbname
-        }, function (err) {
-            if (err) {
-                engine.log(err);
-                throw err;
+        var dbc = db.connect(
+            dbOptions, (err) => {
+                if (err) {
+                    engine.log(err);
+                    throw err;
+                }
             }
-        });
+        );
         // Generate auth link via send request
         let ruid = crypto.randomBytes(16).toHex();
         let initURL = wgAPIurl + 'auth/login/?application_id=' + config.WGapiID + '&nofollow=1&redirect_uri=https%3A%2F%2Fsinusbot.alexwolf.ru%2Fauth%2FWGanswer%3Fruid=' + ruid;
@@ -473,7 +476,8 @@ function (sinusbot, config) {
             'method': 'GET',
             'url': initURL,
             'timeout': 6000,
-        }, function (error, response) {1230
+        }, function (error, response) {
+            1230
             if (error) {
                 engine.log("Error: " + error);
                 throw error;
@@ -486,8 +490,8 @@ function (sinusbot, config) {
             // Store request in DB
             let mydata = JSON.parse(response.data);
             if (dbc)
-                dbc.exec("INSERT INTO requests (ruid, uid, tsname, url) VALUES (?, ?, ?, ?)", 
-                     ruid, client.uid(), client.name(), mydata.data.location);
+                dbc.exec("INSERT INTO requests (ruid, uid, tsname, url) VALUES (?, ?, ?, ?)",
+                    ruid, client.uid(), client.name(), mydata.data.location);
             // Send link to client chat
             //client.poke("Link for authorization: https://ts3.alexwolf.ru/auth/?ruid="+ruid);
             client.poke("Ссылка для авторизации: https://ts3.alexwolf.ru/auth/?ruid=" + ruid);
@@ -495,24 +499,24 @@ function (sinusbot, config) {
         return;
     }
 
-    function removeChannelFromDB(channel, invoker){
-        var dbc = db.connect({
-            driver: 'mysql',
-            host: config.dbhost,
-            username: config.dbuser,
-            password: config.dbpassword,
-            database: config.dbname
-        }, function (err) {
-            if (err) {
-                engine.log(err);
-                throw err;
+    function removeChannelFromDB(channel, invoker) {
+        var dbc = db.connect(
+            dbOptions, (err) => {
+                if (err) {
+                    engine.log(err);
+                    throw err;
+                }
             }
-        });
+        );
         if (dbc)
             dbc.exec("DELETE FROM wgchannels WHERE channelid = (?)", channel.id());
     }
 
-    event.on('clientMove', ({client, fromChannel, toChannel}) => {
+    event.on('clientMove', ({
+            client,
+            fromChannel,
+            toChannel
+        }) => {
         if (toChannel == undefined) {
             return;
         }
