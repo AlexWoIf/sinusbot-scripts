@@ -473,7 +473,6 @@ registerPlugin({
             'url': initURL,
             'timeout': 6000,
         }, function (error, response) {
-            1230
             if (error) {
                 engine.log("Error: " + error);
                 throw error;
@@ -484,6 +483,7 @@ registerPlugin({
             }
             // success!
             // Store request in DB
+            engine.log(JSON.stringify(res, null, 4));
             let mydata = JSON.parse(response.data);
             if (dbc)
                 dbc.exec("INSERT INTO requests (ruid, uid, tsname, url) VALUES (?, ?, ?, ?)",
