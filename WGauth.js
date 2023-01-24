@@ -104,7 +104,6 @@ registerPlugin({
             ]
         }, {
             name: 'cluster',
-            indent: 2,
             title: 'Config for every regional API',
             type: 'array',
             vars: [{
@@ -112,9 +111,6 @@ registerPlugin({
                     indent: 2,
                     title: 'Channel for WG auhorization',
                     type: 'channel'
-                }, {
-                    name: 'wgdata',
-                    title: 'Wargaming public API access data',
                 }, {
                     name: 'realm',
                     indent: 2,
@@ -471,7 +467,9 @@ registerPlugin({
         );
         // Generate auth link via send request
         let ruid = crypto.randomBytes(16).toHex();
-        let initURL = wgAPIurl + 'auth/login/?application_id=' + config.WGapiID + '&nofollow=1&redirect_uri=https%3A%2F%2Fsinusbot.alexwolf.ru%2Fauth%2FWGanswer%3Fruid=' + ruid;
+        engine.log(clusterConfig.realm);
+        return;
+        let initURL = wgAPIurl + 'auth/login/?application_id=' + clusterConfig.WGapiID + '&nofollow=1&redirect_uri=https%3A%2F%2Fsinusbot.alexwolf.ru%2Fauth%2FWGanswer%3Fruid=' + ruid;
         http.simpleRequest({
             'method': 'GET',
             'url': initURL,
