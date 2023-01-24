@@ -159,6 +159,7 @@ registerPlugin({
         password: config.dbpassword,
         database: config.dbname,
     }
+
     function parseString(numberBuffer) {
         if (!Array.isArray(numberBuffer))
             return "";
@@ -391,15 +392,10 @@ registerPlugin({
         //    engine.log('Received public event from api!'+ev.queryParams().ruid);
         if (ev.queryParams().status == 'ok') {
             if (Boolean(ev.queryParams().ruid) && Boolean(ev.queryParams().account_id) && Boolean(ev.queryParams().nickname) && Boolean(ev.queryParams().access_token) && Boolean(ev.queryParams().expires_at)) {
-                var dbc = db.connect({
-                    driver: 'mysql',
-                    host: config.dbhost,
-                    username: config.dbuser,
-                    password: config.dbpassword,
-                    database: config.dbname
-                }, function (err) {
+                var dbc = db.connect(dbOptions, (err) => {
                     if (err) {
                         engine.log(err);
+                        return;
                     }
                 });
                 // Delete old requests
@@ -407,42 +403,44 @@ registerPlugin({
                     dbc.exec("DELETE FROM requests WHERE time < (now()- interval 1 hour)");
                 // Search request by ruid
                 if (dbc)
-                    dbc.query("SELECT uid, tsname FROM requests WHERE ruid ='" + ev.queryParams().ruid + "'", function (err, res) {
-                        if (!err) {
-                            if (res.length == 1) {
-                                let uid = parseString(res[0].uid);
-                                let tsname = parseString(res[0].tsname);
-                                //engine.log(uid);
-                                // Verify player name and wgid
-                                http.simpleRequest({
-                                    'method': 'GET',
-                                    'url': wgAPIurl + 'account/info/?application_id=' + config.WGapiID + '&account_id=' + ev.queryParams().account_id + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private',
-                                    'timeout': 6000,
-                                }, function (error, response) {
-                                    if (error) {
-                                        engine.log("Error: " + error);
-                                        return;
-                                    }
-                                    if (response.statusCode != 200) {
-                                        engine.log("HTTP Error: " + response.status);
-                                        return;
-                                    }
-                                    // success!
-                                    let mydata = JSON.parse(response.data);
-                                    engine.log("Response: " + mydata.data[ev.queryParams().account_id].nickname);
-                                    // Save (identity<->WGid) pair into DB
-                                    if (dbc)
-                                        dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, nickname, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?)", uid, tsname, ev.queryParams().account_id, ev.queryParams().nickname, ev.queryParams().access_token, ev.queryParams().expires_at);
-                                    // Delete current ruid
-                                    if (dbc)
-                                        dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
-                                    setPermission(ev.queryParams().account_id, uid);
-                                });
-                            } else {
-                                engine.log("Unique ruid not found in DB");
-                            }
-                        } else {
+                    dbc.query("SELECT uid, tsname, realm FROM requests WHERE ruid ='" + ev.queryParams().ruid + "'", function (err, res) {
+                        if (err) {
                             engine.log(err);
+                            return;
+                        }
+                        if (res.length == 1) {
+                            let uid = parseString(res[0].uid);
+                            let tsname = parseString(res[0].tsname);
+                            let realm = parseString(res[0].realm);
+                            let WGapiID = config.cluster[realm].WGapiID;
+                            // Verify player name and wgid
+                            http.simpleRequest({
+                                'method': 'GET',
+                                'url': wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + ev.queryParams().account_id + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private',
+                                'timeout': 6000,
+                            }, function (error, response) {
+                                if (error) {
+                                    engine.log("Error: " + error);
+                                    return;
+                                }
+                                if (response.statusCode != 200) {
+                                    engine.log("HTTP Error: " + response.status);
+                                    return;
+                                }
+                                // success!
+                                let mydata = JSON.parse(response.data);
+                                engine.log("Response: " + mydata.data[ev.queryParams().account_id].nickname);
+                                // Save (identity<->WGid) pair into DB
+                                if (dbc)
+                                    dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)", uid, tsname, ev.queryParams().account_id, realm, ev.queryParams().nickname, ev.queryParams().access_token, ev.queryParams().expires_at);
+                                // Delete current ruid
+                                if (dbc)
+                                    dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
+                                setPermission(ev.queryParams().account_id, uid);
+                            });
+                        } else {
+                            engine.log("Unique ruid not found in DB");
+                            return;
                         }
                     });
                 //                return {result:'Auth ok. (Success) Just close this window and return to TeamSpeak'};
@@ -450,25 +448,23 @@ registerPlugin({
                     result: 'Auth ok. (Успешно) Можете просто закрыть это окно и вернуться в TeamSpeak'
                 };
             }
+        } else {
+            return {
+                result: 'Auth fail(' + ev.queryParams().message + ')'
+            };
         }
-        return {
-            result: 'Auth fail'
-        };
     }
 
     function generateAuthLink(client, clusterConfig) {
-        var dbc = db.connect(
-            dbOptions, (err) => {
-                if (err) {
-                    engine.log(err);
-                    throw err;
-                }
+        var dbc = db.connect(dbOptions, (err) => {
+            if (err) {
+                engine.log(err);
+                return;
             }
-        );
+        });
         // Generate auth link via send request
         let ruid = crypto.randomBytes(16).toHex();
         let initURL = wgAPIurl[clusterConfig.realm] + 'auth/login/?application_id=' + clusterConfig.WGapiID + '&nofollow=1&redirect_uri=https%3A%2F%2Fsinusbot.alexwolf.ru%2Fauth%2FWGanswer%3Fruid=' + ruid;
-        engine.log(initURL);
         http.simpleRequest({
             'method': 'GET',
             'url': initURL,
@@ -476,40 +472,35 @@ registerPlugin({
         }, function (error, response) {
             if (error) {
                 engine.log("Error: " + error);
-                throw error;
+                return;
             }
             if (response.statusCode != 200) {
                 engine.log("HTTP Error: " + response.status);
-                throw error;
+                return;
             }
             // success!
             // Store request in DB
-            engine.log(JSON.stringify(response.data, null, 4));
-            engine.log(JSON.parse(response.data));
             let mydata = JSON.parse(response.data);
-            if (mydata.status=="error") {
-                engine.log(mydata.status);
-                throw mydata.status;
+            if (mydata.status == "error") {
+                engine.log(mydata.error);
+                return;
             }
             if (dbc)
                 dbc.exec("INSERT INTO requests (ruid, uid, tsname, url) VALUES (?, ?, ?, ?)",
                     ruid, client.uid(), client.name(), mydata.data.location);
             // Send link to client chat
-            //client.poke("Link for authorization: https://ts3.alexwolf.ru/auth/?ruid="+ruid);
             client.poke("Ссылка для авторизации: https://ts3.alexwolf.ru/auth/?ruid=" + ruid);
         });
         return;
     }
 
     function removeChannelFromDB(channel, invoker) {
-        var dbc = db.connect(
-            dbOptions, (err) => {
-                if (err) {
-                    engine.log(err);
-                    throw err;
-                }
+        var dbc = db.connect(dbOptions, (err) => {
+            if (err) {
+                engine.log(err);
+                return;
             }
-        );
+        });
         if (dbc)
             dbc.exec("DELETE FROM wgchannels WHERE channelid = (?)", channel.id());
     }
