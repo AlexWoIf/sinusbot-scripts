@@ -242,9 +242,9 @@ registerPlugin({
         });
     }
 
-    function setPermission(wgid, uid) {
+    function setPermission(wgid, uid, realm) {
         // Request Clan member detail (retrieve clanid and role) using WG API
-        let clanIDurl = wgAPIurl + 'clans/accountinfo/?application_id=' + config.WGapiID + '&account_id=' + wgid + '&fields=clan%2C+role%2C+account_name';
+        let clanIDurl = wgAPIurl[realm] + 'clans/accountinfo/?application_id=' + config.clusterConfig[realm].WGapiID + '&account_id=' + wgid + '&fields=clan%2C+role%2C+account_name';
         http.simpleRequest({
             'method': 'GET',
             'url': clanIDurl,
@@ -260,6 +260,10 @@ registerPlugin({
             }
             // success!
             let mydata = JSON.parse(response.data);
+            if (mydata.status == "error") {
+                engine.log(mydata.error);
+                return;
+            }
             if (Boolean(mydata.data[wgid])) {
                 let name = mydata.data[wgid].account_name;
                 let clan = mydata.data[wgid].clan;
@@ -429,6 +433,10 @@ registerPlugin({
                                 }
                                 // success!
                                 let mydata = JSON.parse(response.data);
+                                if (mydata.status == "error") {
+                                    engine.log(mydata.error);
+                                    return;
+                                }
                                 engine.log("Response: " + mydata.data[ev.queryParams().account_id].nickname);
                                 // Save (identity<->WGid) pair into DB
                                 if (dbc)
@@ -436,7 +444,7 @@ registerPlugin({
                                 // Delete current ruid
                                 if (dbc)
                                     dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
-                                setPermission(ev.queryParams().account_id, uid);
+                                setPermission(ev.queryParams().account_id, uid, realm);
                             });
                         } else {
                             engine.log("Unique ruid not found in DB");
