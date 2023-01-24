@@ -246,7 +246,7 @@ registerPlugin({
 
     function searchClanChannel(wgid, uid, realm) {
         // Request Clan member detail (retrieve clanid and role) using WG API
-        let clanIDurl = wgAPIurl[realm] + 'clans/accountinfo/?application_id=' + config.clusterConfig[realm].WGapiID + '&account_id=' + wgid + '&fields=clan%2C+role%2C+account_name';
+        let clanIDurl = wgAPIurl[realm] + 'clans/accountinfo/?application_id=' + config.cluster[realm].WGapiID + '&account_id=' + wgid + '&fields=clan%2C+role%2C+account_name';
         http.simpleRequest({
             'method': 'GET',
             'url': clanIDurl,
