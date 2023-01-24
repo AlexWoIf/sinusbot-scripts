@@ -484,7 +484,7 @@ registerPlugin({
             }
             // success!
             // Store request in DB
-            engine.log(JSON.stringify(response, null, 4));
+            engine.log(JSON.stringify(response.data, null, 4));
             let mydata = JSON.parse(response.data);
             if (dbc)
                 dbc.exec("INSERT INTO requests (ruid, uid, tsname, url) VALUES (?, ?, ?, ?)",
