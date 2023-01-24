@@ -15,8 +15,8 @@ jobs:
         with:
           ref: develop
       - uses: docker://github/super-linter:v2.1.0
-          env:
-              VALIDATE_JAVASCRIPT_ES: true
+        env:
+          VALIDATE_JAVASCRIPT_ES: true
       - name: SCP files via ssh key
         uses: appleboy/scp-action@master
         with:
