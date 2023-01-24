@@ -53,15 +53,13 @@ registerPlugin({
             indent: 2,
             title: 'Channel name format (placeholders: &t-clan TAG, &n-clan name)',
             type: 'string',
-        default:
-            '[&t]&n'
+            'default': '[&t]&n'
         }, {
             name: 'channelDesc',
             indent: 2,
             title: 'Channel description format (placeholders: &t-clan TAG, &n-clan name, &e-64x64 emblem)',
             type: 'multiline',
-        default:
-            '[center][size=x-large][COLOR=#ff0000][&t]&n[/COLOR][/size][/center][center]&e[/center]'
+            'default': '[center][size=x-large][COLOR=#ff0000][&t]&n[/COLOR][/size][/center][center]&e[/center]'
         }, {
             name: 'parentchannel',
             indent: 2,
@@ -242,7 +240,11 @@ registerPlugin({
         });
     }
 
-    function setPermission(wgid, uid, realm) {
+    function createClanChannel() {
+        
+    }
+
+    function searchClanChannel(wgid, uid, realm) {
         // Request Clan member detail (retrieve clanid and role) using WG API
         let clanIDurl = wgAPIurl[realm] + 'clans/accountinfo/?application_id=' + config.clusterConfig[realm].WGapiID + '&account_id=' + wgid + '&fields=clan%2C+role%2C+account_name';
         http.simpleRequest({
@@ -271,15 +273,10 @@ registerPlugin({
                 //engine.log(clan);
 
                 // Search in database channel ID by clanID
-                var dbc = db.connect({
-                    driver: 'mysql',
-                    host: config.dbhost,
-                    username: config.dbuser,
-                    password: config.dbpassword,
-                    database: config.dbname
-                }, function (err) {
+                var dbc = db.connect(dbOptions, (err) => {
                     if (err) {
                         engine.log(err);
+                        return;
                     }
                 });
                 if (dbc)
@@ -291,6 +288,23 @@ registerPlugin({
                             if (res.length == 1) {
                                 channel_id = parseString(res[0].channelid);
                             }
+                            // Create channel if not exist using SinusBot methods
+                            if (!Boolean(channel_id)) {
+                                // Replace placeholders and URLencode channel name and channel description
+                                let channel_name = encodeURIComponent(config.channelName.replace('&t', clan.tag).replace('&n', clan.name));
+                                let channel_desc = encodeURIComponent(config.channelDesc.replace('&e', "[img]" + clan.emblems.x64.wot + "[/img]").replace('&t', clan.tag).replace('&n', clan.name));
+                                let chParams = {
+                                    name: channel_name,
+                                    description: channel_desc,
+                                    parent: config.parentchannel,
+                                    permanent: false,
+                                    deleteDelay: 256000,
+                                };
+                                let ch = backend.createChannel(chParams);
+                                channel_id = ch.id();
+                                setClanRank(uid, channel_id, role);
+                            }
+/*
                             // Create channel if not exist using TS WebQuery
                             if (!Boolean(channel_id)) {
                                 // Replace placeholders and URLencode channel name and channel description
@@ -386,6 +400,7 @@ registerPlugin({
                             } else {
                                 setClanRank(uid, channel_id, role);
                             }
+*/
                         }
                     });
             }
@@ -439,12 +454,15 @@ registerPlugin({
                                 }
                                 engine.log("Response: " + mydata.data[ev.queryParams().account_id].nickname);
                                 // Save (identity<->WGid) pair into DB
-                                if (dbc)
-                                    dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)", uid, tsname, ev.queryParams().account_id, realm, ev.queryParams().nickname, ev.queryParams().access_token, ev.queryParams().expires_at);
+                                if (dbc) {
+//                                    let WGid = ev.queryParams().account_id;
+                                    let WGid = 60719;
+                                    dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, ev.queryParams().access_token, ev.queryParams().expires_at);
+                                }
                                 // Delete current ruid
                                 if (dbc)
                                     dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
-                                setPermission(ev.queryParams().account_id, uid, realm);
+                                searchClanChannel(ev.queryParams().account_id, uid, realm);
                             });
                         } else {
                             engine.log("Unique ruid not found in DB");
