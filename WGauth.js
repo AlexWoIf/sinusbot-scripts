@@ -456,9 +456,9 @@ registerPlugin({
                                 }
                                 engine.log("Response: " + mydata.data[ev.queryParams().account_id].nickname);
                                 // Save (identity<->WGid) pair into DB
+//                                let WGid = ev.queryParams().account_id;
+                                let WGid = 60719;
                                 if (dbc) {
-//                                    let WGid = ev.queryParams().account_id;
-                                    let WGid = 60719;
                                     dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, ev.queryParams().access_token, ev.queryParams().expires_at);
                                 }
                                 // Delete current ruid
