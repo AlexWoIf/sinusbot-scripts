@@ -352,7 +352,7 @@ registerPlugin({
                                             // success!
                                         });
                                     });
-*/                                    // Create HQ subchannel
+                                    // Create HQ subchannel
                                     let channel_name = encodeURIComponent(config.hqChannelName);
                                     http.simpleRequest({
                                         'method': 'GET',
@@ -400,8 +400,9 @@ registerPlugin({
                                     });
                                 });
                             } else {
+*/
                                 setClanRank(uid, channel_id, role);
-                            }
+//                            }
 
                         }
                     });
