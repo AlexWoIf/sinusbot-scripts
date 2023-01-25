@@ -288,7 +288,9 @@ registerPlugin({
                                     parent: ch,
                                     permanent: true,
                                 };
+                                engine.log(chParams);
                                 let hq = backend.createChannel(chParams);
+                                engine.log(hq.id());
                                 hq.update({
                                     permanent: false,
                                     deleteDelay: 86400,
