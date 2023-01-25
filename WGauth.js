@@ -320,8 +320,8 @@ registerPlugin({
                                     perm.save();
                                 });
                                 // Create HQ subchannel
-                                let channel_name = encodeURIComponent(config.hqChannelName);
-                                let chParams = {
+                                channel_name = encodeURIComponent(config.hqChannelName);
+                                chParams = {
                                     name: channel_name,
                                     parent: ch,
                                     permanent: true,
@@ -342,36 +342,6 @@ registerPlugin({
                             if (dbc)
                                 dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq) VALUES (?, ?, ?)", clan.clan_id, channel_id, hq.id());
                             setClanRank(uid, channel_id, role);
-                            /*
-                            setClanRank(uid, channel_id, role);
-                            // Set additional channel permissions using TS WebQuery
-                            config.hqChannelOptions.forEach(opt => {
-                            http.simpleRequest({
-                            'method': 'GET',
-                            'url': 'http://' + config.addrTS3 + ':10080/1/channeladdperm?cid=' + hq_id + '&permsid=' + opt.optionName + '&permvalue=' + opt.optionValue,
-                            'timeout': 6000,
-                            'headers': {
-                            'x-api-key': config.apikeyWebQuery
-                            }
-                            }, function (error, response) {
-                            if (error) {
-                            engine.log("Error: " + error);
-                            return;
-                            }
-                            if (response.statusCode != 200) {
-                            engine.log("HTTP Error: " + response.status);
-                            return;
-                            }
-                            // success!
-                            });
-                            });
-                            });
-                            });
-                            } else {
-
-                            setClanRank(uid, channel_id, role);
-                            }
-                             */
                         }
                     });
             }
@@ -408,7 +378,7 @@ registerPlugin({
                             getHTTPrequest(verifyURL, (mydata) => {
                                 //engine.log("Response: " + mydata.data[ev.queryParams().account_id].nickname);
                                 // Save (identity<->WGid) pair into DB
-                                //                                let WGid = ev.queryParams().account_id;
+                                //let WGid = ev.queryParams().account_id;
                                 let WGid = 60719;
                                 if (dbc) {
                                     dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, ev.queryParams().access_token, ev.queryParams().expires_at);
