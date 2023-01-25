@@ -299,13 +299,16 @@ registerPlugin({
                                     name: channel_name,
                                     description: channel_desc,
                                     parent: config.parentchannel,
-                                    permanent: true,
+                                    //permanent: true,
                                 };
                                 engine.log(chParams);
                                 let ch = backend.createChannel(chParams);
                                 engine.log(ch);
                                 channel_id = ch.id();
-                                config.channelOptions.forEach(opt => {});
+                                config.channelOptions.forEach(opt => {
+                                    ch.addPermission(opt.optionName).setValue(opt.optionValue);
+                                    ch.addPermission(opt.optionName).save();
+                                });
                                 setClanRank(uid, channel_id, role);
                             }
                             /*
@@ -403,10 +406,9 @@ registerPlugin({
                             });
                             } else {
 
-                             */
-
                             setClanRank(uid, channel_id, role);
-                            //}
+                            }
+                             */
                         }
                     });
             }
