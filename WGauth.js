@@ -289,7 +289,7 @@ registerPlugin({
                             if (res.length == 1) {
                                 channel_id = parseString(res[0].channelid);
                             }
-/*
+
                             // Create channel if not exist using SinusBot methods
                             if (!Boolean(channel_id)) {
                                 // Replace placeholders and URLencode channel name and channel description
@@ -306,7 +306,7 @@ registerPlugin({
                                 channel_id = ch.id();
                                 setClanRank(uid, channel_id, role);
                             }
-*/
+/*/
                             // Create channel if not exist using TS WebQuery
                             if (!Boolean(channel_id)) {
                                 // Replace placeholders and URLencode channel name and channel description
@@ -352,7 +352,7 @@ registerPlugin({
                                             // success!
                                         });
                                     });
-                                    // Create HQ subchannel
+*/                                    // Create HQ subchannel
                                     let channel_name = encodeURIComponent(config.hqChannelName);
                                     http.simpleRequest({
                                         'method': 'GET',
