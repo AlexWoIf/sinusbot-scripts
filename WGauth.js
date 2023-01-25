@@ -282,10 +282,10 @@ registerPlugin({
                                     perm.save();
                                 });
                                 // Create HQ subchannel
-                                channel_name = encodeURIComponent(config.hqChannelName);
+                                channel_name = config.hqChannelName;
                                 chParams = {
                                     name: channel_name,
-                                    parent: ch,
+                                    parent: ch.id(),
                                     permanent: true,
                                 };
                                 engine.log(chParams);
@@ -341,7 +341,6 @@ registerPlugin({
                             // Verify player name and wgid
                             verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + ev.queryParams().account_id + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
                             getHTTPrequest(verifyURL, (mydata) => {
-                                //engine.log("Response: " + mydata.data[ev.queryParams().account_id].nickname);
                                 // Save (identity<->WGid) pair into DB
                                 //let WGid = ev.queryParams().account_id;
                                 let WGid = 60719;
