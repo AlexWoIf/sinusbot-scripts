@@ -166,7 +166,7 @@ registerPlugin({
         return bytewriter.toString();
     }
 
-    function getHTTPrequest(url, callback){
+    function getHTTPrequest(url, callback) {
         http.simpleRequest({
             'method': 'GET',
             'url': url,
@@ -187,10 +187,10 @@ registerPlugin({
                 return;
             }
             //engine.log(mydata);
-            callback(response);
+            callback(mydata);
         });
     }
-        
+
     function setClanRank(uid, clanchannel, role) {
         let group = undefined;
         switch (role) {
@@ -270,25 +270,7 @@ registerPlugin({
     function searchClanChannel(wgid, uid, realm) {
         // Request Clan member detail (retrieve clanid and role) using WG API
         let clanIDurl = wgAPIurl[realm] + 'clans/accountinfo/?application_id=' + config.cluster[realm].WGapiID + '&account_id=' + wgid + '&fields=clan%2C+role%2C+account_name';
-        http.simpleRequest({
-            'method': 'GET',
-            'url': clanIDurl,
-            'timeout': 6000,
-        }, function (error, response) {
-            if (error) {
-                engine.log("Error: " + error);
-                return;
-            }
-            if (response.statusCode != 200) {
-                engine.log("HTTP Error: " + response.status);
-                return;
-            }
-            // success!
-            let mydata = JSON.parse(response.data);
-            if (mydata.status == "error") {
-                engine.log(mydata.error);
-                return;
-            }
+        getHTTPrequest(url, () => {
             //engine.log(mydata);
             if (Boolean(mydata.data[wgid])) {
                 let name = mydata.data[wgid].account_name;
@@ -325,7 +307,10 @@ registerPlugin({
                                 };
                                 //engine.log(chParams);
                                 let ch = backend.createChannel(chParams);
-                                ch.update({permanent:false, deleteDelay:86400,});
+                                ch.update({
+                                    permanent: false,
+                                    deleteDelay: 86400,
+                                });
                                 //engine.log(ch);
                                 channel_id = ch.id();
                                 config.channelOptions.forEach(opt => {
@@ -466,25 +451,8 @@ registerPlugin({
                             let realm = parseString(res[0].realm);
                             let WGapiID = config.cluster[realm].WGapiID;
                             // Verify player name and wgid
-                            http.simpleRequest({
-                                'method': 'GET',
-                                'url': wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + ev.queryParams().account_id + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private',
-                                'timeout': 6000,
-                            }, function (error, response) {
-                                if (error) {
-                                    engine.log("Error: " + error);
-                                    return;
-                                }
-                                if (response.statusCode != 200) {
-                                    engine.log("HTTP Error: " + response.status);
-                                    return;
-                                }
-                                // success!
-                                let mydata = JSON.parse(response.data);
-                                if (mydata.status == "error") {
-                                    engine.log(mydata.error);
-                                    return;
-                                }
+                            verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + ev.queryParams().account_id + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
+                            getHTTPrequest(url, () => {
                                 //engine.log("Response: " + mydata.data[ev.queryParams().account_id].nickname);
                                 // Save (identity<->WGid) pair into DB
                                 //                                let WGid = ev.queryParams().account_id;
@@ -527,11 +495,6 @@ registerPlugin({
         getHTTPrequest(initURL, () => {
             // success!
             // Store request in DB
-            let mydata = JSON.parse(response.data);
-            if (mydata.status == "error") {
-                engine.log(mydata.error);
-                return;
-            }
             if (dbc)
                 dbc.exec("INSERT INTO requests (ruid, uid, tsname, realm, url) VALUES (?, ?, ?, ?, ?)",
                     ruid, client.uid(), client.name(), clusterConfig.realm, mydata.data.location);
