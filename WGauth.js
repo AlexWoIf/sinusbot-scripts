@@ -217,6 +217,15 @@ registerPlugin({
         default:
             engine.log(role);
         }
+        // success!
+        let clnt = backend.getClientByUID(uid);
+        if (Boolean(clnt)) {
+            clanchannel.setChannelGroup(clnt, group);
+            if (clnt.getChannels()[0].id() == config.authchannel) {
+                clnt.moveTo(clanchannel);
+            }
+        }
+
         // Find DBid for 'uid' using TS WebQuery
         http.simpleRequest({
             'method': 'GET',
@@ -287,7 +296,7 @@ registerPlugin({
                 });
                 if (dbc)
                     dbc.exec("UPDATE wgplayers SET nickname=(?), clanid=(?) WHERE uid=(?) AND wgid=(?)", name, clan.clan_id, uid, wgid);
-                if (dbc)
+                if (dbc) {
                     dbc.query("SELECT channelid FROM wgchannels WHERE clanid =" + clan.clan_id, function (err, res) {
                         if (!err) {
                             let channel_id = undefined;
@@ -341,9 +350,10 @@ registerPlugin({
                             //  Store new clan channel in DB
                             if (dbc)
                                 dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq) VALUES (?, ?, ?)", clan.clan_id, channel_id, hq.id());
-                            setClanRank(uid, channel_id, role);
+                            setClanRank(uid, ch, role);
                         }
                     });
+                }
             }
         });
     }
