@@ -240,9 +240,7 @@ registerPlugin({
         });
     }
 
-    function createClanChannel() {
-        
-    }
+    function createClanChannel() {}
 
     function searchClanChannel(wgid, uid, realm) {
         // Request Clan member detail (retrieve clanid and role) using WG API
@@ -293,8 +291,8 @@ registerPlugin({
                             // Create channel if not exist using SinusBot methods
                             if (!Boolean(channel_id)) {
                                 // Replace placeholders and URLencode channel name and channel description
-//                                let channel_name = encodeURIComponent(config.channelName.replace('&t', clan.tag).replace('&n', clan.name));
-//                                let channel_desc = encodeURIComponent(config.channelDesc.replace('&e', "[img]" + clan.emblems.x64.wot + "[/img]").replace('&t', clan.tag).replace('&n', clan.name));
+                                //                                let channel_name = encodeURIComponent(config.channelName.replace('&t', clan.tag).replace('&n', clan.name));
+                                //                                let channel_desc = encodeURIComponent(config.channelDesc.replace('&e', "[img]" + clan.emblems.x64.wot + "[/img]").replace('&t', clan.tag).replace('&n', clan.name));
                                 let channel_name = config.channelName.replace('&t', clan.tag).replace('&n', clan.name);
                                 let channel_desc = config.channelDesc.replace('&e', "[img]" + clan.emblems.x64.wot + "[/img]").replace('&t', clan.tag).replace('&n', clan.name);
                                 let chParams = {
@@ -307,11 +305,10 @@ registerPlugin({
                                 let ch = backend.createChannel(chParams);
                                 engine.log(ch);
                                 channel_id = ch.id();
-                                config.channelOptions.forEach(opt => {
-                                });
+                                config.channelOptions.forEach(opt => {});
                                 setClanRank(uid, channel_id, role);
                             }
-/*/
+                            /*/
                             // Create channel if not exist using TS WebQuery
                             if (!Boolean(channel_id)) {
                                 // Replace placeholders and URLencode channel name and channel description
@@ -405,9 +402,10 @@ registerPlugin({
                                     });
                                 });
                             } else {
-*/
-                                setClanRank(uid, channel_id, role);
-//                            }
+                                 * /
+                                                                setClanRank(uid, channel_id, role);
+                                / /
+                            }
 
                         }
                     });
@@ -462,7 +460,7 @@ registerPlugin({
                                 }
                                 engine.log("Response: " + mydata.data[ev.queryParams().account_id].nickname);
                                 // Save (identity<->WGid) pair into DB
-//                                let WGid = ev.queryParams().account_id;
+                                //                                let WGid = ev.queryParams().account_id;
                                 let WGid = 60719;
                                 if (dbc) {
                                     dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, ev.queryParams().access_token, ev.queryParams().expires_at);
