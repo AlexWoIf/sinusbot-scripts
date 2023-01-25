@@ -225,53 +225,6 @@ registerPlugin({
                 clnt.moveTo(clanchannel);
             }
         }
-
-        // Find DBid for 'uid' using TS WebQuery
-        http.simpleRequest({
-            'method': 'GET',
-            'url': 'http://' + config.addrTS3 + ':10080/1/clientdbfind?pattern=' + encodeURIComponent(uid) + '&-uid',
-            'timeout': 6000,
-            'headers': {
-                'x-api-key': config.apikeyWebQuery
-            }
-        }, function (error, response) {
-            if (error) {
-                engine.log("Error: " + error);
-                return;
-            }
-            if (response.statusCode != 200) {
-                engine.log("HTTP Error: " + response.status);
-                return;
-            }
-            // success!
-            let mydata = JSON.parse(response.data);
-            //engine.log("Response: " + mydata.body[0].cldbid);
-            // Set channelgroup 'group' for channel 'channel_id' for client 'client.uid()' using TS WebQuery
-            http.simpleRequest({
-                'method': 'GET',
-                'url': 'http://' + config.addrTS3 + ':10080/1/setclientchannelgroup?cgid=' + group + '&cid=' + clanchannel + '&cldbid=' + mydata.body[0].cldbid,
-                'timeout': 6000,
-                'headers': {
-                    'x-api-key': config.apikeyWebQuery
-                }
-            }, function (error, response) {
-                if (error) {
-                    engine.log("Error: " + error);
-                    return;
-                }
-                if (response.statusCode != 200) {
-                    engine.log("HTTP Error: " + response.status);
-                    return;
-                }
-                // success!
-                let clnt = backend.getClientByUID(uid);
-                if (Boolean(clnt)) {
-                    if (clnt.getChannels()[0].id() == config.authchannel) {
-                        clnt.moveTo(clanchannel);
-                    }
-                }
-            });
-        });
     }
 
     function createClanChannel() {}
@@ -390,9 +343,8 @@ registerPlugin({
                                 // Save (identity<->WGid) pair into DB
                                 //let WGid = ev.queryParams().account_id;
                                 let WGid = 60719;
-                                if (dbc) {
+                                if (dbc)
                                     dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, ev.queryParams().access_token, ev.queryParams().expires_at);
-                                }
                                 // Delete current ruid
                                 if (dbc)
                                     dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
