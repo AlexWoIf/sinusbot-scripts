@@ -299,10 +299,10 @@ registerPlugin({
                                 let channel_desc = config.channelDesc.replace('&e', "[img]" + clan.emblems.x64.wot + "[/img]").replace('&t', clan.tag).replace('&n', clan.name);
                                 let chParams = {
                                     name: channel_name,
-                                    description: channel_desc,
+//                                    description: channel_desc,
                                     parent: config.parentchannel,
-                                    permanent: false,
-                                    deleteDelay: 256000,
+//                                    permanent: false,
+//                                    deleteDelay: 256000,
                                 };
                                 engine.log(chParams);
                                 let ch = backend.createChannel(chParams);
