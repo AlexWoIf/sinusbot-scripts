@@ -307,7 +307,7 @@ registerPlugin({
                                     ch.addPermission(opt.optionName).setValue(opt.optionValue);
                                     ch.addPermission(opt.optionName).save();
                                 });
-                                ch.update({permanent:false});
+                                ch.update({permanent:false, deleteDelay:256000});
                                 setClanRank(uid, channel_id, role);
                             }
                             /*
