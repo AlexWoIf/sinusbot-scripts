@@ -319,6 +319,24 @@ registerPlugin({
                                     perm.setValue(opt.optionValue);
                                     perm.save();
                                 });
+                                // Create HQ subchannel
+                                let channel_name = encodeURIComponent(config.hqChannelName);
+                                let chParams = {
+                                    name: channel_name,
+                                    parent: ch,
+                                    permanent: true,
+                                };
+                                let hq = backend.createChannel(chParams);
+                                hq.update({
+                                    permanent: false,
+                                    deleteDelay: 86400,
+                                });
+                                config.hqChannelOptions.forEach(opt => {
+                                    engine.log(opt.optionName, opt.optionValue);
+                                    let perm = ch.addPermission(opt.optionName);
+                                    perm.setValue(opt.optionValue);
+                                    perm.save();
+                                });
                             }
                             setClanRank(uid, channel_id, role);
                             /*
