@@ -166,6 +166,31 @@ registerPlugin({
         return bytewriter.toString();
     }
 
+    function getHTTPrequest(url, callback){
+        http.simpleRequest({
+            'method': 'GET',
+            'url': url,
+            'timeout': 6000,
+        }, function (error, response) {
+            if (error) {
+                engine.log("Error: " + error);
+                return;
+            }
+            if (response.statusCode != 200) {
+                engine.log("HTTP Error: " + response.status);
+                return;
+            }
+            // success!
+            let mydata = JSON.parse(response.data);
+            if (mydata.status == "error") {
+                engine.log(mydata.error);
+                return;
+            }
+            //engine.log(mydata);
+            callback(response);
+        });
+    }
+        
     function setClanRank(uid, clanchannel, role) {
         let group = undefined;
         switch (role) {
@@ -300,14 +325,15 @@ registerPlugin({
                                 };
                                 //engine.log(chParams);
                                 let ch = backend.createChannel(chParams);
+                                ch.update({permanent:false, deleteDelay:86400,});
                                 //engine.log(ch);
                                 channel_id = ch.id();
                                 config.channelOptions.forEach(opt => {
                                     engine.log(opt.optionName, opt.optionValue);
-                                    ch.addPermission(opt.optionName).setValue(opt.optionValue);
-                                    ch.addPermission(opt.optionName).save();
+                                    let perm = ch.addPermission(opt.optionName);
+                                    perm.setValue(opt.optionValue);
+                                    perm.save();
                                 });
-                                ch.update({permanent:false, deleteDelay:256000,});
                             }
                             setClanRank(uid, channel_id, role);
                             /*
@@ -498,19 +524,7 @@ registerPlugin({
         // Generate auth link via send request
         let ruid = crypto.randomBytes(16).toHex();
         let initURL = wgAPIurl[clusterConfig.realm] + 'auth/login/?application_id=' + clusterConfig.WGapiID + '&nofollow=1&redirect_uri=https%3A%2F%2Fsinusbot.alexwolf.ru%2Fauth%2FWGanswer%3Fruid=' + ruid;
-        http.simpleRequest({
-            'method': 'GET',
-            'url': initURL,
-            'timeout': 6000,
-        }, function (error, response) {
-            if (error) {
-                engine.log("Error: " + error);
-                return;
-            }
-            if (response.statusCode != 200) {
-                engine.log("HTTP Error: " + response.status);
-                return;
-            }
+        getHTTPrequest(initURL, () => {
             // success!
             // Store request in DB
             let mydata = JSON.parse(response.data);
