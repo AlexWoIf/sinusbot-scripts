@@ -301,13 +301,14 @@ registerPlugin({
                                     name: channel_name,
                                     description: channel_desc,
                                     parent: config.parentchannel,
+                                    permanent: true,
                                 };
                                 engine.log(chParams);
                                 let ch = backend.createChannel(chParams);
                                 engine.log(ch);
                                 channel_id = ch.id();
                                 config.channelOptions.forEach(opt => {
-                                }
+                                });
                                 setClanRank(uid, channel_id, role);
                             }
 /*/
