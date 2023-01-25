@@ -270,7 +270,7 @@ registerPlugin({
     function searchClanChannel(wgid, uid, realm) {
         // Request Clan member detail (retrieve clanid and role) using WG API
         let clanIDurl = wgAPIurl[realm] + 'clans/accountinfo/?application_id=' + config.cluster[realm].WGapiID + '&account_id=' + wgid + '&fields=clan%2C+role%2C+account_name';
-        getHTTPrequest(url, () => {
+        getHTTPrequest(clanIDurl, (mydata) => {
             //engine.log(mydata);
             if (Boolean(mydata.data[wgid])) {
                 let name = mydata.data[wgid].account_name;
@@ -338,76 +338,11 @@ registerPlugin({
                                     perm.save();
                                 });
                             }
-                            setClanRank(uid, channel_id, role);
-                            /*
-                            // Create channel if not exist using TS WebQuery
-                            if (!Boolean(channel_id)) {
-                            // Replace placeholders and URLencode channel name and channel description
-                            let channel_name = encodeURIComponent(config.channelName.replace('&t', clan.tag).replace('&n', clan.name));
-                            let channel_desc = encodeURIComponent(config.channelDesc.replace('&e', "[img]" + clan.emblems.x64.wot + "[/img]").replace('&t', clan.tag).replace('&n', clan.name));
-                            http.simpleRequest({
-                            'method': 'GET',
-                            'url': 'http://' + config.addrTS3 + ':10080/1/channelcreate?channel_name=' + channel_name + '&channel_description=' + channel_desc + '&cpid=' + config.parentchannel,
-                            'timeout': 6000,
-                            'headers': {
-                            'x-api-key': config.apikeyWebQuery
-                            }
-                            }, function (error, response) {
-                            if (error) {
-                            engine.log("Error: " + error);
-                            return;
-                            }
-                            if (response.statusCode != 200) {
-                            engine.log("HTTP Error: " + response.status);
-                            return;
-                            }
-                            // success!
-                            channel_id = JSON.parse(response.data).body[0].cid;
-                            setClanRank(uid, channel_id, role);
-                            // Set additional channel permissions using TS WebQuery
-                            config.channelOptions.forEach(opt => {
-                            http.simpleRequest({
-                            'method': 'GET',
-                            'url': 'http://' + config.addrTS3 + ':10080/1/channeladdperm?cid=' + channel_id + '&permsid=' + opt.optionName + '&permvalue=' + opt.optionValue,
-                            'timeout': 6000,
-                            'headers': {
-                            'x-api-key': config.apikeyWebQuery
-                            }
-                            }, function (error, response) {
-                            if (error) {
-                            engine.log("Error: " + error);
-                            return;
-                            }
-                            if (response.statusCode != 200) {
-                            engine.log("HTTP Error: " + response.status);
-                            return;
-                            }
-                            // success!
-                            });
-                            });
-                            // Create HQ subchannel
-                            let channel_name = encodeURIComponent(config.hqChannelName);
-                            http.simpleRequest({
-                            'method': 'GET',
-                            'url': 'http://' + config.addrTS3 + ':10080/1/channelcreate?channel_name=' + channel_name + '&cpid=' + channel_id,
-                            'timeout': 6000,
-                            'headers': {
-                            'x-api-key': config.apikeyWebQuery
-                            }
-                            }, function (error, response) {
-                            if (error) {
-                            engine.log("Error: " + error);
-                            return;
-                            }
-                            if (response.statusCode != 200) {
-                            engine.log("HTTP Error: " + response.status);
-                            return;
-                            }
-                            // success!
-                            let hq_id = JSON.parse(response.data).body[0].cid;
                             //  Store new clan channel in DB
                             if (dbc)
-                            dbc.exec("INSERT INTO wgchannels (clanid, channelid, hq) VALUES (?, ?, ?)", clan.clan_id, channel_id, hq_id);
+                                dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq) VALUES (?, ?, ?)", clan.clan_id, channel_id, hq.id());
+                            setClanRank(uid, channel_id, role);
+                            /*
                             setClanRank(uid, channel_id, role);
                             // Set additional channel permissions using TS WebQuery
                             config.hqChannelOptions.forEach(opt => {
@@ -470,7 +405,7 @@ registerPlugin({
                             let WGapiID = config.cluster[realm].WGapiID;
                             // Verify player name and wgid
                             verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + ev.queryParams().account_id + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
-                            getHTTPrequest(url, () => {
+                            getHTTPrequest(verifyURL, (mydata) => {
                                 //engine.log("Response: " + mydata.data[ev.queryParams().account_id].nickname);
                                 // Save (identity<->WGid) pair into DB
                                 //                                let WGid = ev.queryParams().account_id;
@@ -510,7 +445,7 @@ registerPlugin({
         // Generate auth link via send request
         let ruid = crypto.randomBytes(16).toHex();
         let initURL = wgAPIurl[clusterConfig.realm] + 'auth/login/?application_id=' + clusterConfig.WGapiID + '&nofollow=1&redirect_uri=https%3A%2F%2Fsinusbot.alexwolf.ru%2Fauth%2FWGanswer%3Fruid=' + ruid;
-        getHTTPrequest(initURL, () => {
+        getHTTPrequest(initURL, (mydata) => {
             // success!
             // Store request in DB
             if (dbc)
