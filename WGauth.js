@@ -32,20 +32,6 @@ registerPlugin({
             indent: 2,
             type: 'string'
         }, {
-            name: 'tsdata',
-            title: 'Teamspeak WebQuery access data',
-        }, {
-            name: 'apikeyWebQuery',
-            indent: 2,
-            title: 'Teamspeak WebQuery apikey',
-            placeholder: '987654321',
-            type: 'password'
-        }, {
-            name: 'addrTS3',
-            indent: 2,
-            title: 'TeamSpeak WebQuery address',
-            type: 'string'
-        }, {
             name: 'channeldata',
             title: 'Parameters for creating new clan channel',
         }, {
@@ -289,7 +275,7 @@ registerPlugin({
                                 engine.log(hq.id());
                                 config.hqChannelOptions.forEach(opt => {
                                     engine.log(opt.optionName, opt.optionValue);
-                                    let perm = ch.addPermission(opt.optionName);
+                                    let perm = hq.addPermission(opt.optionName);
                                     perm.setValue(opt.optionValue);
                                     perm.save();
                                 });
