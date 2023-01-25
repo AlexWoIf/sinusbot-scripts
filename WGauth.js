@@ -288,7 +288,7 @@ registerPlugin({
                                 });
                                 //  Store new clan channel in DB
                                 if (dbc)
-                                    dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq) VALUES (?, ?, ?)", clan.clan_id, channel_id, hq.id());
+                                    dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq) VALUES (?, ?, ?, ?)", clan.clan_id, realm, channel_id, hq.id());
                                 setClanRank(uid, ch, role);
                             }
                         }
@@ -324,13 +324,14 @@ registerPlugin({
                             let realm = parseString(res[0].realm);
                             let WGapiID = config.cluster[realm].WGapiID;
                             // Verify player name and wgid
-                            verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + ev.queryParams().account_id + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
+                            let WGid = 60719;
+                            //verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + ev.queryParams().account_id + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
+                            verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + WGid + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
                             getHTTPrequest(verifyURL, (mydata) => {
+                                engine.log(mydata);
                                 // Save (identity<->WGid) pair into DB
-                                //let WGid = ev.queryParams().account_id;
-                                let WGid = 60719;
                                 if (dbc)
-                                    dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, ev.queryParams().access_token, ev.queryParams().expires_at);
+                                    dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, clanid? access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, mydata.clan_id, ev.queryParams().access_token, ev.queryParams().expires_at);
                                 // Delete current ruid
                                 if (dbc)
                                     dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
