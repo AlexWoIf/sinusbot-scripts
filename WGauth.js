@@ -206,10 +206,10 @@ registerPlugin({
         // success!
         let clnt = backend.getClientByUID(uid);
         if (Boolean(clnt)) {
-            clanchannel.setChannelGroup(clnt, group);
             if (clnt.getChannels()[0].id() == config.authchannel) {
                 clnt.moveTo(clanchannel);
             }
+            clanchannel.setChannelGroup(clnt, group);
         }
     }
 
@@ -331,7 +331,7 @@ registerPlugin({
                                 engine.log(mydata);
                                 // Save (identity<->WGid) pair into DB
                                 if (dbc)
-                                    dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, clanid? access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, mydata.clan_id, ev.queryParams().access_token, ev.queryParams().expires_at);
+                                    dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, clanid, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, mydata.data.clan_id, ev.queryParams().access_token, ev.queryParams().expires_at);
                                 // Delete current ruid
                                 if (dbc)
                                     dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
