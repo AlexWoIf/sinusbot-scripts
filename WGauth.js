@@ -269,10 +269,6 @@ registerPlugin({
                                 };
                                 //engine.log(chParams);
                                 let ch = backend.createChannel(chParams);
-                                ch.update({
-                                    permanent: false,
-                                    deleteDelay: 86400,
-                                });
                                 //engine.log(ch);
                                 channel_id = ch.id();
                                 config.channelOptions.forEach(opt => {
@@ -291,15 +287,19 @@ registerPlugin({
                                 engine.log(chParams);
                                 let hq = backend.createChannel(chParams);
                                 engine.log(hq.id());
-                                hq.update({
-                                    permanent: false,
-                                    deleteDelay: 86400,
-                                });
                                 config.hqChannelOptions.forEach(opt => {
                                     engine.log(opt.optionName, opt.optionValue);
                                     let perm = ch.addPermission(opt.optionName);
                                     perm.setValue(opt.optionValue);
                                     perm.save();
+                                });
+                                hq.update({
+                                    permanent: false,
+                                    deleteDelay: 86400,
+                                });
+                                ch.update({
+                                    permanent: false,
+                                    deleteDelay: 86400,
                                 });
                             }
                             //  Store new clan channel in DB
