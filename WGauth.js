@@ -264,12 +264,12 @@ registerPlugin({
                 engine.log(mydata.error);
                 return;
             }
-            engine.log(mydata);
+            //engine.log(mydata);
             if (Boolean(mydata.data[wgid])) {
                 let name = mydata.data[wgid].account_name;
                 let clan = mydata.data[wgid].clan;
                 let role = mydata.data[wgid].role;
-                engine.log(clan.name);
+                //engine.log(clan.name);
 
                 // Search in database channel ID by clanID
                 var dbc = db.connect(dbOptions, (err) => {
@@ -287,28 +287,27 @@ registerPlugin({
                             if (res.length == 1) {
                                 channel_id = parseString(res[0].channelid);
                             }
-
                             // Create channel if not exist using SinusBot methods
                             if (!Boolean(channel_id)) {
-                                // Replace placeholders and URLencode channel name and channel description
-                                //                                let channel_name = encodeURIComponent(config.channelName.replace('&t', clan.tag).replace('&n', clan.name));
-                                //                                let channel_desc = encodeURIComponent(config.channelDesc.replace('&e', "[img]" + clan.emblems.x64.wot + "[/img]").replace('&t', clan.tag).replace('&n', clan.name));
+                                // Replace placeholders in channel name and channel description
                                 let channel_name = config.channelName.replace('&t', clan.tag).replace('&n', clan.name);
                                 let channel_desc = config.channelDesc.replace('&e', "[img]" + clan.emblems.x64.wot + "[/img]").replace('&t', clan.tag).replace('&n', clan.name);
                                 let chParams = {
                                     name: channel_name,
                                     description: channel_desc,
                                     parent: config.parentchannel,
-                                    //permanent: true,
+                                    permanent: true,
                                 };
-                                engine.log(chParams);
+                                //engine.log(chParams);
                                 let ch = backend.createChannel(chParams);
-                                engine.log(ch);
+                                //engine.log(ch);
                                 channel_id = ch.id();
                                 config.channelOptions.forEach(opt => {
+                                    engine.log(opt.optionName, opt.optionValue);
                                     ch.addPermission(opt.optionName).setValue(opt.optionValue);
                                     ch.addPermission(opt.optionName).save();
                                 });
+                                ch.update({permanent:false});
                                 setClanRank(uid, channel_id, role);
                             }
                             /*
