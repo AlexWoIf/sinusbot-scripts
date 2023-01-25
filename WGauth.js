@@ -271,7 +271,7 @@ registerPlugin({
                 let name = mydata.data[wgid].account_name;
                 let clan = mydata.data[wgid].clan;
                 let role = mydata.data[wgid].role;
-                engine.log(clan);
+                engine.log(clan.name);
 
                 // Search in database channel ID by clanID
                 var dbc = db.connect(dbOptions, (err) => {
@@ -303,6 +303,7 @@ registerPlugin({
                                     deleteDelay: 256000,
                                 };
                                 let ch = backend.createChannel(chParams);
+                                engine.log(ch);
                                 channel_id = ch.id();
                                 setClanRank(uid, channel_id, role);
                             }
