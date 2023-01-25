@@ -274,7 +274,6 @@ registerPlugin({
                                 let hq = backend.createChannel(chParams);
                                 engine.log(hq.id());
                                 config.hqChannelOptions.forEach(opt => {
-                                    engine.log(opt.optionName, opt.optionValue);
                                     let perm = hq.addPermission(opt.optionName);
                                     perm.setValue(opt.optionValue);
                                     perm.save();
@@ -287,11 +286,11 @@ registerPlugin({
                                     permanent: false,
                                     deleteDelay: 86400,
                                 });
+                                //  Store new clan channel in DB
+                                if (dbc)
+                                    dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq) VALUES (?, ?, ?)", clan.clan_id, channel_id, hq.id());
+                                setClanRank(uid, ch, role);
                             }
-                            //  Store new clan channel in DB
-                            if (dbc)
-                                dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq) VALUES (?, ?, ?)", clan.clan_id, channel_id, hq.id());
-                            setClanRank(uid, ch, role);
                         }
                     });
                 }
