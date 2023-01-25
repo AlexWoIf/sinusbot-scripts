@@ -307,9 +307,9 @@ registerPlugin({
                                     ch.addPermission(opt.optionName).setValue(opt.optionValue);
                                     ch.addPermission(opt.optionName).save();
                                 });
-                                ch.update({permanent:false, deleteDelay:256000});
-                                setClanRank(uid, channel_id, role);
+                                ch.update({permanent:false, deleteDelay:256000,});
                             }
+                            setClanRank(uid, channel_id, role);
                             /*
                             // Create channel if not exist using TS WebQuery
                             if (!Boolean(channel_id)) {
@@ -459,7 +459,7 @@ registerPlugin({
                                     engine.log(mydata.error);
                                     return;
                                 }
-                                engine.log("Response: " + mydata.data[ev.queryParams().account_id].nickname);
+                                //engine.log("Response: " + mydata.data[ev.queryParams().account_id].nickname);
                                 // Save (identity<->WGid) pair into DB
                                 //                                let WGid = ev.queryParams().account_id;
                                 let WGid = 60719;
