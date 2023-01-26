@@ -300,7 +300,7 @@ registerPlugin({
     }
 
     function checkWGanswer(ev) {
-        let answerHTML = `<!DOCTYPE html>
+        let answerHTML = {html:`<!DOCTYPE html>
 <html>
     <head>
         <title>Профессиональное создание сайта в интернете с примерами</title>
@@ -310,7 +310,7 @@ registerPlugin({
         <h1>Как создать сайт в интернете</h1>
         <p>Здесь размещается содержание документа, которое видно всем пользователям.</p>
     </body>
-</html>`;
+        </html>`};
         let authOK = {
             result: 'Auth ok. (Успешно) Можете просто закрыть это окно и вернуться в TeamSpeak'
         };
