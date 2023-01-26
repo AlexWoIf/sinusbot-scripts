@@ -209,7 +209,7 @@ registerPlugin({
         engine.log(uid, clnt);
         if (Boolean(clnt)) {
             //if (clnt.getChannels()[0].id() == config.cluster[0].authchannel) {
-                clnt.moveTo(clanchannel);
+            clnt.moveTo(clanchannel);
             //}
             clanchannel.setChannelGroup(clnt, group);
         }
@@ -330,7 +330,9 @@ registerPlugin({
                             getHTTPrequest(verifyURL, (mydata) => {
                                 //engine.log(mydata);
                                 // Save (identity<->WGid) pair into DB
-                                let clanid = Boolean(mydata.data.clan_id))? mydata.data.clan_id : 0;
+                                let clanid = mydata.data.clan_id;
+                                if (clanid == undefined)
+                                    clanid = 0;
                                 engine.log(clanid)
                                 if (dbc)
                                     dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, clanid, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, clanid, ev.queryParams().access_token, ev.queryParams().expires_at);
