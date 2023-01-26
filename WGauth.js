@@ -208,10 +208,8 @@ registerPlugin({
         let group = backend.getChannelGroupByID(groupID);
         engine.log(uid, clnt);
         if (Boolean(clnt)) {
-            //if (clnt.getChannels()[0].id() == config.cluster[0].authchannel) {
-            clnt.moveTo(clanchannel);
-            //}
             clanchannel.setChannelGroup(clnt, group);
+            clnt.moveTo(clanchannel);
         }
     }
 
