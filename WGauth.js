@@ -243,7 +243,7 @@ registerPlugin({
                             engine.log(channel_id);
                             // Create channel if not exist using SinusBot methods
                             let ch = backend.getChannelByID(channel_id);
-                            engine.log(ch);
+                            engine.log(!Boolean(ch));
                             if (!Boolean(ch)) {
                                 // Replace placeholders in channel name and channel description
                                 let channel_name = config.channelName.replace('&t', clan.tag).replace('&n', clan.name);
