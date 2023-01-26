@@ -300,17 +300,6 @@ registerPlugin({
     }
 
     function checkWGanswer(ev) {
-        let answerHTML = {html:`<!DOCTYPE html>
-<html>
-    <head>
-        <title>Профессиональное создание сайта в интернете с примерами</title>
-        <meta charset="utf-8">
-    </head>
-    <body>
-        <h1>Как создать сайт в интернете</h1>
-        <p>Здесь размещается содержание документа, которое видно всем пользователям.</p>
-    </body>
-        </html>`};
         let authOK = {
             result: 'Auth ok. (Успешно) Можете просто закрыть это окно и вернуться в TeamSpeak'
         };
@@ -342,8 +331,8 @@ registerPlugin({
                             let realm = parseString(res[0].realm);
                             let WGapiID = config.cluster[realm].WGapiID;
                             // Verify player name and wgid
-                            //let WGid = 60719;
                             let WGid = ev.queryParams().account_id;
+                            //let WGid = ev.queryParams().account_id;
                             verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + WGid + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
                             getHTTPrequest(verifyURL, (mydata) => {
                                 engine.log(mydata, mydata.data[WGid].clan_id);
@@ -367,7 +356,7 @@ registerPlugin({
                     });
                 }
                 //                return {result:'Auth ok. (Success) Just close this window and return to TeamSpeak'};
-                return answerHTML;
+                return authOK;
             }
         } else {
             return authFail;
