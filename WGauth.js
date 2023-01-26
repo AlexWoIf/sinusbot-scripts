@@ -306,7 +306,7 @@ registerPlugin({
         let authFail = {
             result: 'Auth fail(' + ev.queryParams().message + ')'
         };
-        //engine.log('Received public event from api!'+ev.queryParams().ruid);
+        engine.log('Received public event from api!'+ev.queryParams());
         if (ev.queryParams().status == 'ok') {
             if (Boolean(ev.queryParams().ruid) && Boolean(ev.queryParams().account_id) && Boolean(ev.queryParams().nickname) && Boolean(ev.queryParams().access_token) && Boolean(ev.queryParams().expires_at)) {
                 var dbc = db.connect(dbOptions, (err) => {
