@@ -240,8 +240,10 @@ registerPlugin({
                             if (res.length == 1) {
                                 channel_id = parseString(res[0].channelid);
                             }
+                            engine.log(channel_id);
                             // Create channel if not exist using SinusBot methods
                             let ch = backend.getChannelByID(channel_id);
+                            engine.log(ch);
                             if (!Boolean(ch)) {
                                 // Replace placeholders in channel name and channel description
                                 let channel_name = config.channelName.replace('&t', clan.tag).replace('&n', clan.name);
@@ -301,6 +303,9 @@ registerPlugin({
         let authOK = {
             result: 'Auth ok. (Успешно) Можете просто закрыть это окно и вернуться в TeamSpeak'
         };
+        let authFail = {
+            result: 'Auth fail(' + ev.queryParams().message + ')'
+        };
         //    engine.log('Received public event from api!'+ev.queryParams().ruid);
         if (ev.queryParams().status == 'ok') {
             if (Boolean(ev.queryParams().ruid) && Boolean(ev.queryParams().account_id) && Boolean(ev.queryParams().nickname) && Boolean(ev.queryParams().access_token) && Boolean(ev.queryParams().expires_at)) {
@@ -326,8 +331,8 @@ registerPlugin({
                             let realm = parseString(res[0].realm);
                             let WGapiID = config.cluster[realm].WGapiID;
                             // Verify player name and wgid
-                            let WGid = 60719;
                             //verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + ev.queryParams().account_id + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
+                            let WGid = 60719;
                             verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + WGid + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
                             getHTTPrequest(verifyURL, (mydata) => {
                                 //engine.log(mydata);
@@ -341,7 +346,7 @@ registerPlugin({
                                 // Delete current ruid
                                 if (dbc)
                                     dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
-                                if (!clanid)
+                                if (!Boolean(clanid))
                                     searchClanChannel(WGid, uid, realm);
                             });
                         } else {
@@ -354,9 +359,7 @@ registerPlugin({
                 return authOK;
             }
         } else {
-            return {
-                result: 'Auth fail(' + ev.queryParams().message + ')'
-            };
+            return authFail;
         }
     }
 
