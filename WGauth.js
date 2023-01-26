@@ -255,7 +255,7 @@ registerPlugin({
                                     permanent: true,
                                 };
                                 //engine.log(chParams);
-                                let ch = backend.createChannel(chParams);
+                                ch = backend.createChannel(chParams);
                                 //engine.log(ch);
                                 channel_id = ch.id();
                                 config.channelOptions.forEach(opt => {
