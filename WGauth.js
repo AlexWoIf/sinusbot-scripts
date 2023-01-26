@@ -258,7 +258,7 @@ registerPlugin({
                                 //engine.log(ch);
                                 channel_id = ch.id();
                                 config.channelOptions.forEach(opt => {
-                                    engine.log(opt.optionName, opt.optionValue);
+                                    //engine.log(opt.optionName, opt.optionValue);
                                     let perm = ch.addPermission(opt.optionName);
                                     perm.setValue(opt.optionValue);
                                     perm.save();
@@ -330,8 +330,10 @@ registerPlugin({
                             getHTTPrequest(verifyURL, (mydata) => {
                                 //engine.log(mydata);
                                 // Save (identity<->WGid) pair into DB
+                                let clanid = Boolean(mydata.data.clan_id))? mydata.data.clan_id : 0;
+                                engine.log(clanid)
                                 if (dbc)
-                                    dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, clanid, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, mydata.data.clan_id, ev.queryParams().access_token, ev.queryParams().expires_at);
+                                    dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, clanid, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, clanid, ev.queryParams().access_token, ev.queryParams().expires_at);
                                 // Delete current ruid
                                 if (dbc)
                                     dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
