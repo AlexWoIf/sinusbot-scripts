@@ -205,6 +205,7 @@ registerPlugin({
         }
         // success!
         let clnt = backend.getClientByUID(uid);
+        engine.log(uid, clnt);
         if (Boolean(clnt)) {
             if (clnt.getChannels()[0].id() == config.authchannel) {
                 clnt.moveTo(clanchannel);
@@ -233,8 +234,6 @@ registerPlugin({
                         return;
                     }
                 });
-                if (dbc)
-                    dbc.exec("UPDATE wgplayers SET nickname=(?), clanid=(?) WHERE uid=(?) AND wgid=(?)", name, clan.clan_id, uid, wgid);
                 if (dbc) {
                     dbc.query("SELECT channelid FROM wgchannels WHERE clanid =" + clan.clan_id, function (err, res) {
                         if (!err) {
@@ -270,9 +269,9 @@ registerPlugin({
                                     parent: ch.id(),
                                     permanent: true,
                                 };
-                                engine.log(chParams);
+                                //engine.log(chParams);
                                 let hq = backend.createChannel(chParams);
-                                engine.log(hq.id());
+                                //engine.log(hq.id());
                                 config.hqChannelOptions.forEach(opt => {
                                     let perm = hq.addPermission(opt.optionName);
                                     perm.setValue(opt.optionValue);
@@ -328,7 +327,7 @@ registerPlugin({
                             //verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + ev.queryParams().account_id + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
                             verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + WGid + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
                             getHTTPrequest(verifyURL, (mydata) => {
-                                engine.log(mydata);
+                                //engine.log(mydata);
                                 // Save (identity<->WGid) pair into DB
                                 if (dbc)
                                     dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, clanid, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, mydata.data.clan_id, ev.queryParams().access_token, ev.queryParams().expires_at);
