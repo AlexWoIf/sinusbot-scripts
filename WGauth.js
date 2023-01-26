@@ -332,7 +332,7 @@ registerPlugin({
                             let WGapiID = config.cluster[realm].WGapiID;
                             // Verify player name and wgid
                             let WGid = ev.queryParams().account_id;
-                            //let WGid = ev.queryParams().account_id;
+                            engine.log(WGid);
                             verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + WGid + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
                             getHTTPrequest(verifyURL, (mydata) => {
                                 engine.log(mydata, mydata.data[WGid].clan_id);
