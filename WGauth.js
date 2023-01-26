@@ -178,12 +178,12 @@ registerPlugin({
     }
 
     function setClanRank(uid, clanchannel, role) {
-        let group = undefined;
+        let groupID = undefined;
         switch (role) {
         case 'commander':
         case 'executive_officer':
             // Set channel admin(5)
-            group = 5;
+            groupID = 5;
             break;
         case 'personnel_officer':
         case 'combat_officer':
@@ -192,19 +192,20 @@ registerPlugin({
         case 'recruitment_officer':
         case 'junior_officer':
             // Set channel officer(6)
-            group = 6;
+            groupID = 6;
             break;
         case 'private':
         case 'recruit':
         case 'reservist':
             // Set channel member(7)
-            group = 7;
+            groupID = 7;
             break;
         default:
             engine.log(role);
         }
         // success!
         let clnt = backend.getClientByUID(uid);
+        let group = backend.getChannelGroupByID(groupID);
         engine.log(uid, clnt);
         if (Boolean(clnt)) {
             //if (clnt.getChannels()[0].id() == config.cluster[0].authchannel) {
