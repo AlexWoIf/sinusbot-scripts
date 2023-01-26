@@ -300,13 +300,24 @@ registerPlugin({
     }
 
     function checkWGanswer(ev) {
+        let answerHTML = `<!DOCTYPE html>
+<html>
+    <head>
+        <title>Профессиональное создание сайта в интернете с примерами</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <h1>Как создать сайт в интернете</h1>
+        <p>Здесь размещается содержание документа, которое видно всем пользователям.</p>
+    </body>
+</html>`;
         let authOK = {
             result: 'Auth ok. (Успешно) Можете просто закрыть это окно и вернуться в TeamSpeak'
         };
         let authFail = {
             result: 'Auth fail(' + ev.queryParams().message + ')'
         };
-        engine.log('Received public event from api!'+ev.queryParams());
+        engine.log('Received public event from api!'+JSON.stringify(ev.queryParams().null,4));
         if (ev.queryParams().status == 'ok') {
             if (Boolean(ev.queryParams().ruid) && Boolean(ev.queryParams().account_id) && Boolean(ev.queryParams().nickname) && Boolean(ev.queryParams().access_token) && Boolean(ev.queryParams().expires_at)) {
                 var dbc = db.connect(dbOptions, (err) => {
@@ -356,7 +367,7 @@ registerPlugin({
                     });
                 }
                 //                return {result:'Auth ok. (Success) Just close this window and return to TeamSpeak'};
-                return authOK;
+                return answerHTML;
             }
         } else {
             return authFail;
