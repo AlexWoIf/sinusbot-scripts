@@ -337,7 +337,7 @@ registerPlugin({
                             getHTTPrequest(verifyURL, (mydata) => {
                                 engine.log(mydata);
                                 // Save (identity<->WGid) pair into DB
-                                let clanid = mydata.data.clan_id;
+                                let clanid = mydata.data[WGid].clan_id;
                                 if (clanid == undefined)
                                     clanid = 0;
                                 engine.log(clanid)
