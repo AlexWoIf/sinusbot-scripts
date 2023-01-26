@@ -310,7 +310,7 @@ registerPlugin({
                 if (dbc)
                     dbc.exec("DELETE FROM requests WHERE time < (now()- interval 1 hour)");
                 // Search request by ruid
-                if (dbc)
+                if (dbc) {
                     dbc.query("SELECT uid, tsname, realm FROM requests WHERE ruid ='" + ev.queryParams().ruid + "'", function (err, res) {
                         if (err) {
                             engine.log(err);
@@ -344,6 +344,7 @@ registerPlugin({
                             return;
                         }
                     });
+                }
                 //                return {result:'Auth ok. (Success) Just close this window and return to TeamSpeak'};
                 return {
                     result: 'Auth ok. (Успешно) Можете просто закрыть это окно и вернуться в TeamSpeak'
