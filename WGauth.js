@@ -241,7 +241,8 @@ registerPlugin({
                                 channel_id = parseString(res[0].channelid);
                             }
                             // Create channel if not exist using SinusBot methods
-                            if (!Boolean(channel_id)) {
+                            let ch = backend.getChannelByID(channel_id);
+                            if (!Boolean(ch)) {
                                 // Replace placeholders in channel name and channel description
                                 let channel_name = config.channelName.replace('&t', clan.tag).replace('&n', clan.name);
                                 let channel_desc = config.channelDesc.replace('&e', "[img]" + clan.emblems.x64.wot + "[/img]").replace('&t', clan.tag).replace('&n', clan.name);
@@ -287,8 +288,8 @@ registerPlugin({
                                 //  Store new clan channel in DB
                                 if (dbc)
                                     dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq) VALUES (?, ?, ?, ?)", clan.clan_id, realm, channel_id, hq.id());
-                                setClanRank(uid, ch, role);
                             }
+                            setClanRank(uid, ch, role);
                         }
                     });
                 }
@@ -297,6 +298,9 @@ registerPlugin({
     }
 
     function checkWGanswer(ev) {
+        let authOK = {
+            result: 'Auth ok. (Успешно) Можете просто закрыть это окно и вернуться в TeamSpeak'
+        };
         //    engine.log('Received public event from api!'+ev.queryParams().ruid);
         if (ev.queryParams().status == 'ok') {
             if (Boolean(ev.queryParams().ruid) && Boolean(ev.queryParams().account_id) && Boolean(ev.queryParams().nickname) && Boolean(ev.queryParams().access_token) && Boolean(ev.queryParams().expires_at)) {
@@ -337,7 +341,8 @@ registerPlugin({
                                 // Delete current ruid
                                 if (dbc)
                                     dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
-                                searchClanChannel(WGid, uid, realm);
+                                if (!clanid)
+                                    searchClanChannel(WGid, uid, realm);
                             });
                         } else {
                             engine.log("Unique ruid not found in DB");
@@ -346,9 +351,7 @@ registerPlugin({
                     });
                 }
                 //                return {result:'Auth ok. (Success) Just close this window and return to TeamSpeak'};
-                return {
-                    result: 'Auth ok. (Успешно) Можете просто закрыть это окно и вернуться в TeamSpeak'
-                };
+                return authOK;
             }
         } else {
             return {
