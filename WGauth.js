@@ -341,7 +341,7 @@ registerPlugin({
                                 if (clanid == undefined)
                                     clanid = 0;
                                 let data = mydata.data[WGid];
-                                engine.log(data, Object.keys(data), data.clan_id, data["nickname"]);
+                                engine.log(data, Object.keys(data), data['clan_id'], data.nickname);
                                 if (dbc)
                                     dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, clanid, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, clanid, ev.queryParams().access_token, ev.queryParams().expires_at);
                                 // Delete current ruid
