@@ -327,82 +327,82 @@ registerPlugin({
                             let WGid = ev.queryParams().account_id;
                             verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + WGid + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
                             getHTTPrequest(verifyURL, (mydata) => {
-                                if (!Boolean(mydata.data[WGid].private)
+                                if (!Boolean(mydata.data[WGid].private))
                                     return;
-                                    // Save (identity<->WGid) pair into DB
-                                    let clanid = mydata.data[WGid].clan_id;
-                                    if (clanid == undefined)
-                                        clanid = 0;
-                                    let data = mydata.data[WGid];
-                                    if (dbc)
-                                        dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, clanid, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, clanid, ev.queryParams().access_token, ev.queryParams().expires_at);
-                                        // Delete current ruid
-                                        if (dbc)
-                                            dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
-                                        if (Boolean(clanid))
-                                            searchClanChannel(WGid, uid, realm);
-                                });
-                            } else {
-                                engine.log("Unique ruid not found in DB");
-                                return;
-                            }
-                        });
-                    }
-                    //                return {result:'Auth ok. (Success) Just close this window and return to TeamSpeak'};
-                    return authOK;
+                                // Save (identity<->WGid) pair into DB
+                                let clanid = mydata.data[WGid].clan_id;
+                                if (clanid == undefined)
+                                    clanid = 0;
+                                let data = mydata.data[WGid];
+                                if (dbc)
+                                    dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, clanid, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, clanid, ev.queryParams().access_token, ev.queryParams().expires_at);
+                                // Delete current ruid
+                                if (dbc)
+                                    dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
+                                if (Boolean(clanid))
+                                    searchClanChannel(WGid, uid, realm);
+                            });
+                        } else {
+                            engine.log("Unique ruid not found in DB");
+                            return;
+                        }
+                    });
                 }
-            } else {
-                return authFail;
+                //                return {result:'Auth ok. (Success) Just close this window and return to TeamSpeak'};
+                return authOK;
             }
+        } else {
+            return authFail;
         }
+    }
 
-        function generateAuthLink(client, clusterConfig) {
-            var dbc = db.connect(dbOptions, (err) => {
-                if (err) {
-                    engine.log(err);
-                    return;
-                }
-            });
-            // Generate auth link via send request
-            let ruid = crypto.randomBytes(16).toHex();
-            let initURL = wgAPIurl[clusterConfig.realm] + 'auth/login/?application_id=' + clusterConfig.WGapiID + '&nofollow=1&redirect_uri=https%3A%2F%2Fsinusbot.alexwolf.ru%2Fauth%2FWGanswer%3Fruid=' + ruid;
-            getHTTPrequest(initURL, (mydata) => {
-                // success!
-                // Store request in DB
-                if (dbc)
-                    dbc.exec("INSERT INTO requests (ruid, uid, tsname, realm, url) VALUES (?, ?, ?, ?, ?)",
-                        ruid, client.uid(), client.name(), clusterConfig.realm, mydata.data.location);
-                // Send link to client chat
-                client.poke("Ссылка для авторизации: https://ts3.alexwolf.ru/auth/?ruid=" + ruid);
-            });
-            return;
-        }
-
-        function removeChannelFromDB(channel, invoker) {
-            var dbc = db.connect(dbOptions, (err) => {
-                if (err) {
-                    engine.log(err);
-                    return;
-                }
-            });
-            if (dbc)
-                dbc.exec("DELETE FROM wgchannels WHERE channelid = (?)", channel.id());
-        }
-
-        event.on('clientMove', ({
-                client,
-                fromChannel,
-                toChannel
-            }) => {
-            if (toChannel == undefined) {
+    function generateAuthLink(client, clusterConfig) {
+        var dbc = db.connect(dbOptions, (err) => {
+            if (err) {
+                engine.log(err);
                 return;
             }
-            // If client enter Auth channel
-            for (var i = 0; i < config.cluster.length; i++) {
-                if (toChannel.id() == config.cluster[i].authchannel)
-                    generateAuthLink(client, config.cluster[i]);
+        });
+        // Generate auth link via send request
+        let ruid = crypto.randomBytes(16).toHex();
+        let initURL = wgAPIurl[clusterConfig.realm] + 'auth/login/?application_id=' + clusterConfig.WGapiID + '&nofollow=1&redirect_uri=https%3A%2F%2Fsinusbot.alexwolf.ru%2Fauth%2FWGanswer%3Fruid=' + ruid;
+        getHTTPrequest(initURL, (mydata) => {
+            // success!
+            // Store request in DB
+            if (dbc)
+                dbc.exec("INSERT INTO requests (ruid, uid, tsname, realm, url) VALUES (?, ?, ?, ?, ?)",
+                    ruid, client.uid(), client.name(), clusterConfig.realm, mydata.data.location);
+            // Send link to client chat
+            client.poke("Ссылка для авторизации: https://ts3.alexwolf.ru/auth/?ruid=" + ruid);
+        });
+        return;
+    }
+
+    function removeChannelFromDB(channel, invoker) {
+        var dbc = db.connect(dbOptions, (err) => {
+            if (err) {
+                engine.log(err);
+                return;
             }
         });
-        event.on('public:WGanswer', checkWGanswer);
-        event.on('channelDelete', removeChannelFromDB);
-    })
+        if (dbc)
+            dbc.exec("DELETE FROM wgchannels WHERE channelid = (?)", channel.id());
+    }
+
+    event.on('clientMove', ({
+            client,
+            fromChannel,
+            toChannel
+        }) => {
+        if (toChannel == undefined) {
+            return;
+        }
+        // If client enter Auth channel
+        for (var i = 0; i < config.cluster.length; i++) {
+            if (toChannel.id() == config.cluster[i].authchannel)
+                generateAuthLink(client, config.cluster[i]);
+        }
+    });
+    event.on('public:WGanswer', checkWGanswer);
+    event.on('channelDelete', removeChannelFromDB);
+})
