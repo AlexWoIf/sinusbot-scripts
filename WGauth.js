@@ -335,7 +335,7 @@ registerPlugin({
                             engine.log(WGid);
                             verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + WGid + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
                             getHTTPrequest(verifyURL, (mydata) => {
-                                engine.log(mydata, (mydata.data[WGid]).clan_id);
+                                engine.log(mydata.data[WGid], (mydata.data[WGid]).clan_id);
                                 // Save (identity<->WGid) pair into DB
                                 let clanid = mydata.data[WGid].clan_id;
                                 if (clanid == undefined)
