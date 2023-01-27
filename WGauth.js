@@ -206,7 +206,6 @@ registerPlugin({
         // success!
         let clnt = backend.getClientByUID(uid);
         let group = backend.getChannelGroupByID(groupID);
-        engine.log(uid, clnt);
         if (Boolean(clnt)) {
             clanchannel.setChannelGroup(clnt, group);
             clnt.moveTo(clanchannel);
@@ -219,12 +218,10 @@ registerPlugin({
         // Request Clan member detail (retrieve clanid and role) using WG API
         let clanIDurl = wgAPIurl[realm] + 'clans/accountinfo/?application_id=' + config.cluster[realm].WGapiID + '&account_id=' + wgid + '&fields=clan%2C+role%2C+account_name';
         getHTTPrequest(clanIDurl, (mydata) => {
-            //engine.log(mydata);
             if (Boolean(mydata.data[wgid])) {
                 let name = mydata.data[wgid].account_name;
                 let clan = mydata.data[wgid].clan;
                 let role = mydata.data[wgid].role;
-                //engine.log(clan.name);
 
                 // Search in database channel ID by clanID
                 var dbc = db.connect(dbOptions, (err) => {
@@ -240,10 +237,8 @@ registerPlugin({
                             if (res.length == 1) {
                                 channel_id = parseString(res[0].channelid);
                             }
-                            engine.log(channel_id);
                             // Create channel if not exist using SinusBot methods
                             let ch = backend.getChannelByID(channel_id);
-                            engine.log(!Boolean(ch));
                             if (!Boolean(ch)) {
                                 // Replace placeholders in channel name and channel description
                                 let channel_name = config.channelName.replace('&t', clan.tag).replace('&n', clan.name);
@@ -271,9 +266,7 @@ registerPlugin({
                                     parent: ch.id(),
                                     permanent: true,
                                 };
-                                //engine.log(chParams);
                                 let hq = backend.createChannel(chParams);
-                                //engine.log(hq.id());
                                 config.hqChannelOptions.forEach(opt => {
                                     let perm = hq.addPermission(opt.optionName);
                                     perm.setValue(opt.optionValue);
@@ -306,7 +299,7 @@ registerPlugin({
         let authFail = {
             result: 'Auth fail(' + ev.queryParams().message + ')'
         };
-        engine.log('Received public event from api!'+JSON.stringify(ev.queryParams(), null,4));
+        //engine.log('Received public event from api!'+JSON.stringify(ev.queryParams(), null,4));
         if (ev.queryParams().status == 'ok') {
             if (Boolean(ev.queryParams().ruid) && Boolean(ev.queryParams().account_id) && Boolean(ev.queryParams().nickname) && Boolean(ev.queryParams().access_token) && Boolean(ev.queryParams().expires_at)) {
                 var dbc = db.connect(dbOptions, (err) => {
@@ -332,16 +325,13 @@ registerPlugin({
                             let WGapiID = config.cluster[realm].WGapiID;
                             // Verify player name and wgid
                             let WGid = ev.queryParams().account_id;
-                            engine.log(WGid);
                             verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + WGid + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
                             getHTTPrequest(verifyURL, (mydata) => {
-                                engine.log(mydata.data[WGid], String(mydata.data[WGid].clan_id));
                                 // Save (identity<->WGid) pair into DB
                                 let clanid = mydata.data[WGid].clan_id;
                                 if (clanid == undefined)
                                     clanid = 0;
                                 let data = mydata.data[WGid];
-                                engine.log(data, Object.keys(data), String(data['clan_id']), data.nickname);
                                 if (dbc)
                                     dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, clanid, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, clanid, ev.queryParams().access_token, ev.queryParams().expires_at);
                                 // Delete current ruid
