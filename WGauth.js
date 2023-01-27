@@ -335,13 +335,13 @@ registerPlugin({
                             engine.log(WGid);
                             verifyURL = wgAPIurl[realm] + 'account/info/?application_id=' + WGapiID + '&account_id=' + WGid + '&access_token=' + ev.queryParams().access_token + '&fields=nickname%2C+clan_id%2C+private';
                             getHTTPrequest(verifyURL, (mydata) => {
-                                engine.log(mydata.data[WGid], (mydata.data[WGid]).clan_id);
+                                engine.log(mydata.data[WGid], String(mydata.data[WGid].clan_id));
                                 // Save (identity<->WGid) pair into DB
                                 let clanid = mydata.data[WGid].clan_id;
                                 if (clanid == undefined)
                                     clanid = 0;
                                 let data = mydata.data[WGid];
-                                engine.log(data, Object.keys(data), data['clan_id'], data.nickname);
+                                engine.log(data, Object.keys(data), String(data['clan_id']), data.nickname);
                                 if (dbc)
                                     dbc.exec("REPLACE INTO wgplayers (uid, tsname, wgid, realm, nickname, clanid, access_token, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", uid, tsname, WGid, realm, ev.queryParams().nickname, clanid, ev.queryParams().access_token, ev.queryParams().expires_at);
                                 // Delete current ruid
