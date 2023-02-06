@@ -4,7 +4,7 @@ Authomatically create clan channel for any clan member and give him one of three
 /*global registerPlugin*/
 registerPlugin({
     name: 'Wargaming OpenID auth',
-    version: '1.01a',
+    version: '1.01',
     description: 'This plugin manage Wargaming OpenID auth.',
     author: 'AlexWolf <alexwolf@inbox.ru>',
     requiredModules: ['http', 'db', 'crypto'],
