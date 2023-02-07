@@ -285,7 +285,7 @@ registerPlugin({
                                     if (Boolean(mydata.data.icon_id)) {
                                         icon_id = mydata.data.icon_id;
                                         ch.update({
-                                            icon: icon_id
+                                            icon: icon_id | -4294967296,
                                         });
                                     }
                                     engine.log("Icon ID:" + icon_id);
