@@ -279,7 +279,7 @@ registerPlugin({
                                     deleteDelay: 86400,
                                 });
                                 // Set clan emblem as channel icon
-                                getHTTPrequest("https://ts3.alexwolf.ru/auth/download_icon.php?url="+encodeURI(url), (mydata) => {
+                                getHTTPrequest("https://ts3.alexwolf.ru/auth/download_icon.php?url=" + encodeURI(clan.emblems.x64.wot), (mydata) => {
                                     let icon_id = 0;
                                     if (Boolean(mydata.data.icon_id)) {
                                         icon_id = mydata.data.icon_id;
