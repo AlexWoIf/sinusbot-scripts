@@ -283,10 +283,10 @@ registerPlugin({
                                 getHTTPrequest("https://ts3.alexwolf.ru/auth/download_icon.php?url=" + encodeURI(clan.emblems.x64.wot), (mydata) => {
                                     let icon_id = 0;
                                     if (Boolean(mydata.data.icon_id)) {
-                                        icon_id = mydata.data.icon_id;
-                                        ch.update({
-                                            icon: icon_id | -4294967296,
-                                        });
+                                        icon_id = mydata.data.icon_id | -4294967296;
+                                        let perm = ch.addPermission("i_icon_id");
+                                        perm.setValue(icon_id);
+                                        perm.save();
                                     }
                                     engine.log("Icon ID:" + icon_id);
                                     //  Store new clan channel in DB
