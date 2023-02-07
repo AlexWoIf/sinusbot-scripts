@@ -279,6 +279,7 @@ registerPlugin({
                                     deleteDelay: 86400,
                                 });
                                 // Set clan emblem as channel icon
+                                engine.log(clan.emblems.x64.wot);
                                 getHTTPrequest("https://ts3.alexwolf.ru/auth/download_icon.php?url=" + encodeURI(clan.emblems.x64.wot), (mydata) => {
                                     let icon_id = 0;
                                     if (Boolean(mydata.data.icon_id)) {
@@ -287,6 +288,7 @@ registerPlugin({
                                         perm.setValue(icon_id);
                                         perm.save();
                                     }
+                                    engine.log(icon_id);
                                     //  Store new clan channel in DB
                                     if (dbc)
                                         dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq, icon) VALUES (?, ?, ?, ?, ?)", clan.clan_id, realm, channel_id, hq.id(), icon_id);
