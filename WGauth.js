@@ -4,7 +4,7 @@ Authomatically create clan channel for any clan member and give him one of three
 /*global registerPlugin*/
 registerPlugin({
     name: 'Wargaming OpenID auth',
-    version: '1.01',
+    version: '1.02',
     description: 'This plugin manage Wargaming OpenID auth.',
     author: 'AlexWolf <alexwolf@inbox.ru>',
     requiredModules: ['http', 'db', 'crypto'],
@@ -212,8 +212,6 @@ registerPlugin({
         }
     }
 
-    function createClanChannel() {}
-
     function searchClanChannel(wgid, uid, realm) {
         // Request Clan member detail (retrieve clanid and role) using WG API
         let clanIDurl = wgAPIurl[realm] + 'clans/accountinfo/?application_id=' + config.cluster[realm].WGapiID + '&account_id=' + wgid + '&fields=clan%2C+role%2C+account_name';
@@ -280,9 +278,19 @@ registerPlugin({
                                     permanent: false,
                                     deleteDelay: 86400,
                                 });
-                                //  Store new clan channel in DB
-                                if (dbc)
-                                    dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq) VALUES (?, ?, ?, ?)", clan.clan_id, realm, channel_id, hq.id());
+                                // Set clan emblem as channel icon
+                                getHTTPrequest("https://ts3.alexwolf.ru/auth/download_icon.php?url="+encodeURI(url), (mydata) => {
+                                    let icon_id = 0;
+                                    if (Boolean(mydata.data.icon_id)) {
+                                        icon_id = mydata.data.icon_id;
+                                        let perm = hq.addPermission("i_icon_id");
+                                        perm.setValue(icon_id);
+                                        perm.save();
+                                    }
+                                    //  Store new clan channel in DB
+                                    if (dbc)
+                                        dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq, icon) VALUES (?, ?, ?, ?, ?)", clan.clan_id, realm, channel_id, hq.id(), icon_id);
+                                });
                             }
                             setClanRank(uid, ch, role);
                         }
