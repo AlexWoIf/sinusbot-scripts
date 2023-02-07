@@ -288,7 +288,7 @@ registerPlugin({
                                         perm.setValue(icon_id);
                                         perm.save();
                                     }
-                                    engine.log(icon_id);
+                                    engine.log("Icon ID:"+icon_id);
                                     //  Store new clan channel in DB
                                     if (dbc)
                                         dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq, icon) VALUES (?, ?, ?, ?, ?)", clan.clan_id, realm, channel_id, hq.id(), icon_id);
