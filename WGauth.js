@@ -284,11 +284,11 @@ registerPlugin({
                                     let icon_id = 0;
                                     if (Boolean(mydata.data.icon_id)) {
                                         icon_id = mydata.data.icon_id;
-                                        let perm = hq.addPermission("i_icon_id");
-                                        perm.setValue(icon_id);
-                                        perm.save();
+                                        ch.update({
+                                            icon: icon_id
+                                        });
                                     }
-                                    engine.log("Icon ID:"+icon_id);
+                                    engine.log("Icon ID:" + icon_id);
                                     //  Store new clan channel in DB
                                     if (dbc)
                                         dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq, icon) VALUES (?, ?, ?, ?, ?)", clan.clan_id, realm, channel_id, hq.id(), icon_id);
