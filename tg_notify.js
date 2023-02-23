@@ -58,7 +58,7 @@ registerPlugin({
             indent: 2,
             title: 'Message sent to the user when he joins the support channel',
             placeholder: 'Hello &u, please wait. Admin has been informed [Variable &u = Username]',
-            type: 'string'
+            type: 'string',
             conditions: [{
                     field: 'notificationType',
                     value: 1,
