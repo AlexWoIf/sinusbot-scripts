@@ -118,6 +118,7 @@ registerPlugin({
                         }
                         // success!
                         engine.log('TelegramNotification send...');
+                                engine.log(config.notificationType);
                         switch (config.notificationType) {
                             case "0":
                                 ev.client.poke(config.incomingUserPokeMessage.replace("&u", ev.client.name()));
