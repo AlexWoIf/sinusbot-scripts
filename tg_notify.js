@@ -125,6 +125,8 @@ registerPlugin({
                             case 1:
                                 ev.client.chat(config.incomingUserPokeMessage.replace("&u", ev.client.name()));
                                 break;
+                            default:
+                                engine.log(config.notificationType);
                         }
                         return;
                     });
