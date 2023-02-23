@@ -41,6 +41,7 @@ registerPlugin({
         }, {
             name: 'notificationType',
             title: 'Incoming user notification method',
+            type: 'select',
             options: ['Private message', 'Poke', 'Not notify']
         }, {
             name: 'incomingUserPrivateMessage',
