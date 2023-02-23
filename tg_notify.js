@@ -117,8 +117,15 @@ registerPlugin({
                             return;
                         }
                         // success!
-                        engine.log('TelegramNotification send...')
-                        ev.client.poke(config.incomingUserMessage.replace("&u", ev.client.name()));
+                        engine.log('TelegramNotification send...');
+                        switch (notificationType) {
+                            case 0:
+                                ev.client.poke(config.incomingUserPokeMessage.replace("&u", ev.client.name()));
+                                break;
+                            case 1:
+                                ev.client.chat(config.incomingUserPokeMessage.replace("&u", ev.client.name()));
+                                break;
+                        }
                         return;
                     });
                 }
