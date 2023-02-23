@@ -119,10 +119,10 @@ registerPlugin({
                         // success!
                         engine.log('TelegramNotification send...');
                         switch (config.notificationType) {
-                            case 0:
+                            case "0":
                                 ev.client.poke(config.incomingUserPokeMessage.replace("&u", ev.client.name()));
                                 break;
-                            case 1:
+                            case "1":
                                 ev.client.chat(config.incomingUserPokeMessage.replace("&u", ev.client.name()));
                                 break;
                             default:
