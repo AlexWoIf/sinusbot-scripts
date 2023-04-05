@@ -319,8 +319,8 @@ registerPlugin({
                     }
                 });
                 // Delete old requests
-                if (dbc)
-                    dbc.exec("DELETE FROM requests WHERE time < (now()- interval 1 hour)");
+                //if (dbc)
+                //    dbc.exec("DELETE FROM requests WHERE time < (now()- interval 1 hour)");
                 // Search request by ruid
                 if (dbc) {
                     dbc.query("SELECT uid, tsname, realm FROM requests WHERE ruid ='" + ev.queryParams().ruid + "'", function (err, res) {
@@ -353,7 +353,7 @@ registerPlugin({
                                     searchClanChannel(WGid, uid, realm);
                             });
                         } else {
-                            engine.log("Unique ruid not found in DB");
+                            engine.log("Unique ruid not found in DB", ruid);
                             return;
                         }
                     });
