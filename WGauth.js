@@ -247,7 +247,7 @@ registerPlugin({
                                     parent: config.parentchannel,
                                     permanent: true,
                                 };
-                                //engine.log(chParams);
+                                engine.log(chParams);
                                 ch = backend.createChannel(chParams);
                                 //engine.log(ch);
                                 channel_id = ch.id();
