@@ -279,7 +279,7 @@ registerPlugin({
                                     deleteDelay: 86400,
                                 });
                                 // Set clan emblem as channel icon
-                                //engine.log(encodeURI(clan.emblems.x64.wot));
+                                engine.log(encodeURI(clan.emblems.x64.wot));
                                 getHTTPrequest("https://ts3.alexwolf.ru/auth/download_icon.php?url=" + encodeURI(clan.emblems.x64.wot), (mydata) => {
                                     let icon_id = 0;
                                     if (Boolean(mydata.data.icon_id)) {
@@ -319,8 +319,8 @@ registerPlugin({
                     }
                 });
                 // Delete old requests
-                //if (dbc)
-                //    dbc.exec("DELETE FROM requests WHERE time < (now()- interval 1 hour)");
+                if (dbc)
+                    dbc.exec("DELETE FROM requests WHERE time < (now()- interval 1 hour)");
                 // Search request by ruid
                 if (dbc) {
                     dbc.query("SELECT uid, tsname, realm FROM requests WHERE ruid ='" + ev.queryParams().ruid + "'", function (err, res) {
