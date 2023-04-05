@@ -239,7 +239,7 @@ registerPlugin({
                             let ch = backend.getChannelByID(channel_id);
                             if (!Boolean(ch)) {
                                 // Replace placeholders in channel name and channel description
-                                let channel_name = config.channelName.replace('&t', clan.tag).replace('&n', clan.name);
+                                let channel_name = config.channelName.replace('&t', clan.tag).replace('&n', clan.name).substr(0,40);
                                 let channel_desc = config.channelDesc.replace('&e', "[img]" + clan.emblems.x64.wot + "[/img]").replace('&t', clan.tag).replace('&n', clan.name);
                                 let chParams = {
                                     name: channel_name,
