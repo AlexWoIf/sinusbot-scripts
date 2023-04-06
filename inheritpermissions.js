@@ -4,7 +4,7 @@ Inherit parent permissions
 Copy set of certain permissions from the parent channel to the new created subchannel
  */
 registerPlugin({
-    name: 'Inherit parent permissions',
+    name: 'Inherit parent channel permissions',
     version: '1.0',
     description: 'This plugin copy certain permissions from parent channel to created subchannel.',
     author: 'AlexWolf <alexwolf@inbox.ru>',
