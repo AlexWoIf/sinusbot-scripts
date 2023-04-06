@@ -28,15 +28,21 @@ registerPlugin({
     var backend = require('backend');
     const engine = require('engine');
 
-    event.on('channelCreate', function (ch,cl) {
+    event.on('channelCreate', function (ch, cl) {
         if (cl.isSelf()) {
             // engine.log('Hello from a script!');
             return;
         }
-        var parent = ch.parent();
+        let parent = ch.parent();
         if (parent != null) {
-            parent.getPermissions().forEach( (perm) => {engine.log(perm)});
-            config.perms.forEach( (perm) => {
+            let parentPerms = {};
+            parent.getPermissions().forEach(perm => parentPerms[perm.Name] = perm.Value);
+            config.perms.forEach((perm) => {
+                if (perm in parentPerms) {
+                    let newperm = ch.addPermission(perm);
+                    newperm.setValue(parentPerms[perm]);
+                    newperm.save();
+                }
                 engine.log(perm);
             });
         }
