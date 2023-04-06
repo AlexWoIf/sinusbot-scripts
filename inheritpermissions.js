@@ -35,7 +35,7 @@ registerPlugin({
         }
         var parent = ch.parent();
         if (parent != null) {
-            engine.log(parent.getPermissions());
+            parent.getPermissions().forEach( (perm) => {engine.log()});
             config.perms.forEach( (perm) => {
                 engine.log(perm);
             });
