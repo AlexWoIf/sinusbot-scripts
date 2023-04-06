@@ -37,18 +37,15 @@ registerPlugin({
         if (parent != null) {
             let parentPerms = {};
             parent.getPermissions().forEach(perm => {
-                engine.log(Object.keys(perm));
+//                engine.log(Object.keys(perm));
                 parentPerms[perm.name()] = perm.value();
             });
-            engine.log(parentPerms);
+//            engine.log(parentPerms);
             config.perms.forEach((perm) => {
                 if (perm.name in parentPerms) {
                     let newperm = ch.addPermission(perm.name);
                     newperm.setValue(parentPerms[perm.name]);
                     newperm.save();
-                    engine.log("Found", perm);
-                } else {
-                    engine.log("Not found", perm);
                 }
             });
         }
