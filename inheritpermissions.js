@@ -36,7 +36,10 @@ registerPlugin({
         let parent = ch.parent();
         if (parent != null) {
             let parentPerms = {};
-            parent.getPermissions().forEach(perm => parentPerms[perm.Name] = perm.Value);
+            parent.getPermissions().forEach(perm => {
+                engine.log(perm);
+                parentPerms[perm.Name] = perm.Value;
+            });
             engine.log(parentPerms);
             config.perms.forEach((perm) => {
                 if (perm in parentPerms) {
