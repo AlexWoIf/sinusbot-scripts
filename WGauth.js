@@ -247,9 +247,12 @@ registerPlugin({
                                     parent: config.parentchannel,
                                     permanent: true,
                                 };
-                                engine.log(chParams);
+                                //engine.log(chParams);
                                 ch = backend.createChannel(chParams);
-                                //engine.log(ch);
+                                if (ch == undefined) {
+                                    engine.log(chParams);
+                                    return;
+                                }
                                 channel_id = ch.id();
                                 config.channelOptions.forEach(opt => {
                                     //engine.log(opt.optionName, opt.optionValue);
@@ -278,6 +281,8 @@ registerPlugin({
                                     permanent: false,
                                     deleteDelay: 86400,
                                 });
+                                if (dbc)
+                                    dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq, icon) VALUES (?, ?, ?, ?, ?)", clan.clan_id, realm, channel_id, hq.id(), 0);
                                 // Set clan emblem as channel icon
                                 engine.log(encodeURI(clan.emblems.x64.wot));
                                 getHTTPrequest("https://ts3.alexwolf.ru/auth/download_icon.php?url=" + encodeURI(clan.emblems.x64.wot), (mydata) => {
@@ -291,7 +296,7 @@ registerPlugin({
                                     //engine.log("Icon ID:" + icon_id);
                                     //  Store new clan channel in DB
                                     if (dbc)
-                                        dbc.exec("INSERT INTO wgchannels (clanid, realm, channelid, hq, icon) VALUES (?, ?, ?, ?, ?)", clan.clan_id, realm, channel_id, hq.id(), icon_id);
+                                        dbc.exec("REPLACE INTO wgchannels (clanid, realm, channelid, hq, icon) VALUES (?, ?, ?, ?, ?)", clan.clan_id, realm, channel_id, hq.id(), icon_id);
                                 });
                             }
                             setClanRank(uid, ch, role);
