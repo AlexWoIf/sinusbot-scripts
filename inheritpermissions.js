@@ -30,6 +30,7 @@ registerPlugin({
 
     event.on('channelCreate', function (ch, cl) {
         if (cl == undefined) {
+            engine.log('Undefined creator of channel', ch.name());
             return;
         }
         if (cl.isSelf()) {
