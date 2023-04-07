@@ -29,6 +29,9 @@ registerPlugin({
     const engine = require('engine');
 
     event.on('channelCreate', function (ch, cl) {
+        if (cl == undefined) {
+            return;
+        }
         if (cl.isSelf()) {
             // engine.log('Hello from a script!');
             return;
