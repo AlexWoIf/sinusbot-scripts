@@ -22,7 +22,8 @@ CREATE TABLE `wgchannels` (
   `realm` tinyint(3) unsigned NOT NULL,
   `channelid` int(10) unsigned NOT NULL,
   `hq` int(10) unsigned NOT NULL,
-  `icon` int(10) unsigned NOT NULL
+  `icon` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`clanid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -40,4 +41,4 @@ CREATE TABLE `wgplayers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
--- 2023-04-05 11:40:48
+-- 2023-04-07 12:57:09
