@@ -233,7 +233,7 @@ registerPlugin({
                     }
                 });
                 if (dbc) {
-                    dbc.exec("UPDATE wgplayers SET clanid=? WHERE uid=?", clan.clan_id, wgid);
+                dbc.exec("UPDATE wgplayers SET clanid=? WHERE uid=?", clan.clan_id, wgid);}
                 if (dbc) {
                     dbc.query("SELECT channelid FROM wgchannels WHERE clanid =" + clan.clan_id, function (err, res) {
                         if (!err) {
