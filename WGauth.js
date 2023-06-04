@@ -4,7 +4,7 @@ Authomatically create clan channel for any clan member and give him one of three
 /*global registerPlugin*/
 registerPlugin({
     name: 'Wargaming OpenID auth',
-    version: '1.02',
+    version: '1.03',
     description: 'This plugin manage Wargaming OpenID auth.',
     author: 'AlexWolf <alexwolf@inbox.ru>',
     requiredModules: ['http', 'db', 'crypto'],
@@ -220,6 +220,10 @@ registerPlugin({
                 let name = mydata.data[wgid].account_name;
                 let clan = mydata.data[wgid].clan;
                 let role = mydata.data[wgid].role;
+                
+                if ( ! Boolean(clan) ) {
+                    return;
+                }
 
                 // Search in database channel ID by clanID
                 var dbc = db.connect(dbOptions, (err) => {
@@ -228,6 +232,8 @@ registerPlugin({
                         return;
                     }
                 });
+                if (dbc) {
+                    dbc.exec("UPDATE wgplayers SET clanid=? WHERE uid=?", clan.clan_id, wgid);
                 if (dbc) {
                     dbc.query("SELECT channelid FROM wgchannels WHERE clanid =" + clan.clan_id, function (err, res) {
                         if (!err) {
