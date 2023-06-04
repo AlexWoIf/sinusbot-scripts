@@ -360,8 +360,7 @@ registerPlugin({
                                 // Delete current ruid
                                 if (dbc)
                                     dbc.exec("DELETE FROM requests WHERE ruid = (?)", ev.queryParams().ruid);
-//                                if (Boolean(clanid))
-                                    searchClanChannel(WGid, uid, realm);
+                                searchClanChannel(WGid, uid, realm);
                             });
                         } else {
                             engine.log("Unique ruid not found in DB", ruid);
