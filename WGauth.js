@@ -393,7 +393,7 @@ registerPlugin({
                 dbc.exec("INSERT INTO requests (ruid, uid, tsname, realm, url) VALUES (?, ?, ?, ?, ?)",
                     ruid, client.uid(), client.name(), clusterConfig.realm, mydata.data.location);
             // Send link to client chat
-            client.poke("Ссылка для авторизации: https://ts3.alexwolf.ru/auth/?ruid=" + ruid);
+            client.poke("Ссылка для авторизации: https://sinusbot.alexwolf.ru/auth/?ruid=" + ruid);
         });
         return;
     }
