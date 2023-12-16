@@ -31,7 +31,7 @@ registerPlugin({
             return;
         }
         var userChannel = ev.toChannel;
-        if ( userchannel != undefined ) {
+        if (userchannel) {
             if (userChannel.id() == config.entryChannel) {
                 ev.client.poke("Ссылка для авторизации: "+config.authSiteURL+crypto.randomBytes(8).toString('hex'));
             }
