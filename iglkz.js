@@ -23,12 +23,12 @@ registerPlugin({
     var backend = require('backend');
     const engine = require('engine');
 
-    engine.log(config);
     event.on('clientMove', function (ev) {
         if (ev.client.isSelf()) {
             return;
         }
         var userChannel = ev.toChannel;
+        engine.log(userChannel);
         if (userChannel == config.entryChannel) {
             ev.client.poke("Ссылка для авторизации: "+config.authSiteURL);
         }
