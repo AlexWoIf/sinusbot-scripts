@@ -30,9 +30,9 @@ registerPlugin({
         if (ev.client.isSelf()) {
             return;
         }
-        var userChannel = ev.toChannel;
-        if (userchannel) {
-            if (userChannel.id() == config.entryChannel) {
+        engine.log(ev);
+        if (ev.toChannel) {
+            if (ev.toChannel.id() == config.entryChannel) {
                 ev.client.poke("Ссылка для авторизации: "+config.authSiteURL+crypto.randomBytes(8).toString('hex'));
             }
         }
