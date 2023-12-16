@@ -19,8 +19,11 @@ registerPlugin({
 },
 
     function (sinusbot, config) {
-    var event = require('event');
     var backend = require('backend');
+    var event = require('event');
+
+    const http = require('http');
+    const crypto = require('crypto');
     const engine = require('engine');
 
     event.on('clientMove', function (ev) {
@@ -28,8 +31,10 @@ registerPlugin({
             return;
         }
         var userChannel = ev.toChannel;
-        if (userChannel.id() == config.entryChannel) {
-            ev.client.poke("Ссылка для авторизации: "+config.authSiteURL);
+        if ( userchannel != undefined ) {
+            if (userChannel.id() == config.entryChannel) {
+                ev.client.poke("Ссылка для авторизации: "+config.authSiteURL+crypto.randomBytes(8).toString('hex'));
+            }
         }
     });
 })
