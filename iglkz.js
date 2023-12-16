@@ -28,8 +28,6 @@ registerPlugin({
             return;
         }
         var userChannel = ev.toChannel;
-        engine.log(userChannel);
-        engine.log(config.entryChannel);
         if (userChannel.id() == config.entryChannel) {
             ev.client.poke("Ссылка для авторизации: "+config.authSiteURL);
         }
