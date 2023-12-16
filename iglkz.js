@@ -23,7 +23,9 @@ registerPlugin({
     var backend = require('backend');
     const engine = require('engine');
 
+    engine.log("1");
     event.on('clientMove', function (ev) {
+        engine.log("2");
         if (ev.client.isSelf()) {
             return;
         }
