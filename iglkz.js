@@ -38,7 +38,7 @@ registerPlugin({
     });
     
     event.on('public:createGame', ev => {
-        engine.log('');
+        engine.log('createGame event recieved');
         return 'Answer';
     });
 })
