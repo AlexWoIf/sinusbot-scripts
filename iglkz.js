@@ -36,4 +36,9 @@ registerPlugin({
             }
         }
     });
+    
+    event.on('public:createGame', ev => {
+        engine.log('');
+        return 'Answer';
+    });
 })
