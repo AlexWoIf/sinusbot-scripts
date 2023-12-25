@@ -76,10 +76,13 @@ registerPlugin({
             return;
         }
         channelName = params.channelName;
+        while (backend.getChannelByName(channelName)) {
+            channelName += '!';
+        }
         let chParams = {
             name: channelName,
             //description: channel_desc,
-            //semiPermanent: true,
+            permanent: true,
             parent: config.rootChannel,
             codecQuality: 6,
             deleteDelay: 7200,
@@ -96,6 +99,10 @@ registerPlugin({
             let perm = ch.addPermission(opt.optionName);
             perm.setValue(opt.optionValue);
             perm.save();
+        });
+        ch.update({
+            permanent: false,
+            deleteDelay: 7200,
         });
     });
 })
