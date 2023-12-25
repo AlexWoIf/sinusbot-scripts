@@ -40,6 +40,11 @@ registerPlugin({
     event.on('public:createGame', ev => {
         engine.log('createGame event recieved');
         engine.log(ev.queryParams());
-        return 'Answer';
+        return "{'Answer':'public'}";
+    });
+    
+    event.on('api:test', ev => {
+        engine.log(ev.queryParams());
+        return "{'Answer':'private'}";
     });
 })
