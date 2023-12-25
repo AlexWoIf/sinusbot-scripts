@@ -53,12 +53,25 @@ registerPlugin({
     });
     
     event.on('public:'+config.endpoint, ev => {
-        if (ev.queryParams().password == config.passAPI) {
+        params = ev.queryParams()
+        if (params.password == config.passAPI) {
             engine.log('Pass OK');
         } else {
             engine.log('Pass BAD');
             return;
         }
-        
+        channelName = params.channelName;
+        let chParams = {
+            name: channelName,
+            //description: channel_desc,
+            parent: config.rooChannel,
+            permanent: true,
+        };
+        engine.log(chParams);
+        ch = backend.createChannel(chParams);
+        if (ch == undefined) {
+            engine.log('Channel not created!');
+            return;
+        }
     });
 })
