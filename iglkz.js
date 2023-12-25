@@ -37,20 +37,7 @@ registerPlugin({
         }
     });
     
-    event.on('public:createGame', ev => {
-        engine.log('createGame event recieved');
-        engine.log(ev.user.name());
-        engine.log(ev.queryParams());
-        return "{'Answer':'public'}";
-    });
-    
-    event.on('api:test', ev => {
-        engine.log(ev.user.name());
-        engine.log(ev.queryParams());
-        return "{'Answer':'private'}";
-    });
-    
-    event.on('public:iglkz', ev => {
+    event.on('public:igl.kz', ev => {
         if (ev.queryParams().password == 'pass') {
             engine.log('Pass OK');
         } else {
