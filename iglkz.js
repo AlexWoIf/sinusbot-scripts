@@ -39,7 +39,7 @@ registerPlugin({
     
     event.on('public:createGame', ev => {
         engine.log('createGame event recieved');
-        engine.log(ev);
+        engine.log(ev.queryParams());
         return 'Answer';
     });
 })
