@@ -15,6 +15,11 @@ registerPlugin({
             type: 'string',
             placeholder: 'http://sitename.com/teamspeak/'
         }, {
+            name: 'endpoint',
+            title: 'API endpoint name',
+            indent: 0,
+            type: 'string',
+        }, {
             name: 'passAPI',
             title: 'Password for incoming API requests',
             indent: 0,
@@ -47,8 +52,8 @@ registerPlugin({
         }
     });
     
-    event.on('public:igl.kz', ev => {
-        if (ev.queryParams().password == 'pass') {
+    event.on('public:'+config.endpoint, ev => {
+        if (ev.queryParams().password == config.passAPI) {
             engine.log('Pass OK');
         } else {
             engine.log('Pass BAD');
