@@ -29,6 +29,21 @@ registerPlugin({
             title: 'Parent (root) channel for created rooms',
             indent: 0,
             type: 'channel',
+        }, {
+            name: 'channelOptions',
+            indent: 2,
+            title: 'Channel options for gaming rooms',
+            type: 'array',
+            vars: [{
+                    name: 'optionName',
+                    title: 'Permission name (string like i_channel_needed_join_power)',
+                    type: 'string'
+                }, {
+                    name: 'optionValue',
+                    title: 'Permission value',
+                    type: 'string'
+                }
+            ]
         },
     ]
 },
@@ -65,7 +80,7 @@ registerPlugin({
             name: channelName,
             //description: channel_desc,
             parent: config.rootChannel,
-            permanent: true,
+            semiPermanent: true,
         };
         engine.log(chParams);
         ch = backend.createChannel(chParams);
@@ -73,5 +88,12 @@ registerPlugin({
             engine.log('Channel not created!');
             return;
         }
+        channel_id = ch.id();
+        config.channelOptions.forEach(opt => {
+            //engine.log(opt.optionName, opt.optionValue);
+            let perm = ch.addPermission(opt.optionName);
+            perm.setValue(opt.optionValue);
+            perm.save();
+        });
     });
 })
