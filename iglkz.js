@@ -52,7 +52,7 @@ registerPlugin({
     var backend = require('backend');
     var event = require('event');
 
-    const http = require('http');
+    //const http = require('http');
     const crypto = require('crypto');
     const engine = require('engine');
 
