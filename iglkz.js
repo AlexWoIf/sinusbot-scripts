@@ -93,12 +93,14 @@ registerPlugin({
             return;
         }
         channel_id = ch.id();
-        config.channelOptions.forEach(opt => {
-            //engine.log(opt.optionName, opt.optionValue);
-            let perm = ch.addPermission(opt.optionName);
-            perm.setValue(opt.optionValue);
-            perm.save();
-        });
+        if (config.channelOptions) {
+            config.channelOptions.forEach(opt => {
+                //engine.log(opt.optionName, opt.optionValue);
+                let perm = ch.addPermission(opt.optionName);
+                perm.setValue(opt.optionValue);
+                perm.save();
+            });
+        }
         ch.update({
             permanent: false,
             deleteDelay: 7200,
