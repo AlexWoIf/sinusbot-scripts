@@ -49,4 +49,12 @@ registerPlugin({
         engine.log(ev.queryParams());
         return "{'Answer':'private'}";
     });
+    
+    event.on('public:iglkz', ev => {
+        if (ev.queryParams().password == 'pass') {
+            engine.log('Pass OK');
+        } else {
+            engine.log('Pass BAD');
+        }
+    });
 })
