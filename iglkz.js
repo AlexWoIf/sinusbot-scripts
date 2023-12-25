@@ -14,6 +14,12 @@ registerPlugin({
             indent: 0,
             type: 'string',
             placeholder: 'http://sitename.com/teamspeak/'
+        }, {
+            name: 'rootChannel',
+            title: 'Parent (root) channel for created rooms',
+            indent: 0,
+            type: 'channel',
+            placeholder: 'http://sitename.com/teamspeak/'
         },
     ]
 },
