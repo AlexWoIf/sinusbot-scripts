@@ -49,8 +49,8 @@ registerPlugin({
 },
 
     function (sinusbot, config) {
-    var backend = require('backend');
-    var event = require('event');
+    const backend = require('backend');
+    const event = require('event');
 
     //const http = require('http');
     const crypto = require('crypto');
