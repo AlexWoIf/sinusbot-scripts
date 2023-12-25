@@ -85,7 +85,6 @@ registerPlugin({
             permanent: true,
             parent: config.rootChannel,
             codecQuality: 6,
-            deleteDelay: 7200,
         };
         engine.log(chParams);
         ch = backend.createChannel(chParams);
