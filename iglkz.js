@@ -79,8 +79,10 @@ registerPlugin({
         let chParams = {
             name: channelName,
             //description: channel_desc,
+            //semiPermanent: true,
             parent: config.rootChannel,
-            semiPermanent: true,
+            codecQuality: 6,
+            deleteDelay: 7200,
         };
         engine.log(chParams);
         ch = backend.createChannel(chParams);
