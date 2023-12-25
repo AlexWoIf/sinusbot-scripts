@@ -64,7 +64,7 @@ registerPlugin({
         let chParams = {
             name: channelName,
             //description: channel_desc,
-            parent: config.rooChannel,
+            parent: config.rootChannel,
             permanent: true,
         };
         engine.log(chParams);
