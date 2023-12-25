@@ -44,6 +44,7 @@ registerPlugin({
     });
     
     event.on('api:test', ev => {
+        engine.log(ev.user.name());
         engine.log(ev.queryParams());
         return "{'Answer':'private'}";
     });
