@@ -39,6 +39,7 @@ registerPlugin({
     
     event.on('public:createGame', ev => {
         engine.log('createGame event recieved');
+        engine.log(ev.user.name());
         engine.log(ev.queryParams());
         return "{'Answer':'public'}";
     });
