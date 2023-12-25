@@ -15,11 +15,15 @@ registerPlugin({
             type: 'string',
             placeholder: 'http://sitename.com/teamspeak/'
         }, {
+            name: 'passAPI',
+            title: 'Password for incoming API requests',
+            indent: 0,
+            type: 'password',
+        }, {
             name: 'rootChannel',
             title: 'Parent (root) channel for created rooms',
             indent: 0,
             type: 'channel',
-            placeholder: 'http://sitename.com/teamspeak/'
         },
     ]
 },
@@ -48,6 +52,8 @@ registerPlugin({
             engine.log('Pass OK');
         } else {
             engine.log('Pass BAD');
+            return;
         }
+        
     });
 })
