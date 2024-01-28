@@ -63,7 +63,7 @@ registerPlugin({
         if (ev.toChannel !== undefined) {
             if (ev.toChannel.id() == config.entryChannel) {
                 //ev.client.poke("Ссылка для авторизации: "+config.authSiteURL+crypto.randomBytes(8).toHex());
-                ev.client.poke("Ссылка для авторизации: " + encodeURI(config.authSiteURL+'?'+ev.client.id()));
+                ev.client.poke("Ссылка для авторизации: " + encodeURI(config.authSiteURL+'?'+ev.client.uid()));
             }
         }
     });
