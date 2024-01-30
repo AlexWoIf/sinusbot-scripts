@@ -70,6 +70,7 @@ registerPlugin({
     
     event.on('public:'+config.endpoint, ev => {
         params = ev.queryParams()
+        params.forEach( (name, value) => engine.log( name, value));
         if (params.password == config.passAPI) {
             engine.log('Pass OK');
         } else {
