@@ -80,35 +80,39 @@ registerPlugin({
             engine.log('Pass BAD');
             return;
         }
-        channelName = params.channelName;
-        while (backend.getChannelByName(channelName)) {
-            channelName += '!';
-        }
-        let chParams = {
-            name: channelName,
-            //description: channel_desc,
-            permanent: true,
-            parent: config.rootChannel,
-            codecQuality: 6,
-        };
-        engine.log(chParams);
-        ch = backend.createChannel(chParams);
-        if (ch == undefined) {
-            engine.log('Channel not created!');
-            return;
-        }
-        channel_id = ch.id();
-        if (config.channelOptions) {
-            config.channelOptions.forEach(opt => {
-                //engine.log(opt.optionName, opt.optionValue);
-                let perm = ch.addPermission(opt.optionName);
-                perm.setValue(opt.optionValue);
-                perm.save();
-            });
-        }
-        ch.update({
-            permanent: false,
-            deleteDelay: 7200,
+
+        channelNames = params.channelNames.splt(',').forEach( (channelName, n) => {
+            while (backend.getChannelByName(channelName)) {
+                channelName += '!';
+            }
+            let chParams = {
+                name: channelName,
+                //description: channel_desc,
+                permanent: true,
+                parent: config.rootChannel,
+                codecQuality: 6,
+            };
+            engine.log(chParams);
+            ch = backend.createChannel(chParams);
+            if (ch == undefined) {
+                engine.log('Channel not created!');
+                return;
+            }
+            channel_id = ch.id();
+            if (config.channelOptions) {
+                config.channelOptions.forEach(opt => {
+                    //engine.log(opt.optionName, opt.optionValue);
+                    let perm = ch.addPermission(opt.optionName);
+                    perm.setValue(opt.optionValue);
+                    perm.save();
+                });
+            }
+            ch.update({
+                permanent: false,
+                deleteDelay: 7200,
+            }
+            channels[n] = channel_id
+            );
         });
     });
 })
