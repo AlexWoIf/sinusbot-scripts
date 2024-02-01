@@ -110,9 +110,8 @@ registerPlugin({
             ch.update({
                 permanent: false,
                 deleteDelay: 7200,
-            }
-            channels[n] = channel_id
-            );
+            });
+            channels[n] = channel_id;
         });
     });
 })
