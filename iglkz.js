@@ -82,7 +82,7 @@ registerPlugin({
         }
 
         let channels = [];
-        channelNames = decodeURI(params.channelNames).split(',').forEach( (channelName, n) => {
+        decodeURI(params.channelNames).split(',').forEach((channelName, n) => {
             
             while (backend.getChannelByName(channelName)) {
                 channelName += '!';
@@ -113,7 +113,20 @@ registerPlugin({
                 permanent: false,
                 deleteDelay: 7200,
             });
-            channels[n] = channel_id;
+            channels[n] = ch;
         });
+        
+        response = {}
+        decodeURI(params.players).split(';').forEach((team, n) => {
+            team.split(',').forEach((player) => {
+                let clnt = backend.getClientByUID(player);
+                let group = backend.getChannelGroupByID(groupID);
+                if (Boolean(clnt)) {
+                    channels[n].setChannelGroup(clnt, 6);
+                    clnt.moveTo(channels[n]);
+                }
+            });
+        });
+        return {channels: channels};
     });
 })
