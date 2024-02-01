@@ -70,6 +70,7 @@ registerPlugin({
     
     event.on('public:'+config.endpoint, ev => {
         params = ev.queryParams()
+        engine.log(params);
         params.forEach( (name, value) => {
             engine.log( name, value)
         });
