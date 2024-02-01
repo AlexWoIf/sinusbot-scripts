@@ -44,7 +44,12 @@ registerPlugin({
                     type: 'string'
                 }
             ]
-        },
+        }, {
+            name: 'chGroupID',
+            indent: 2,
+            title: 'Channel group number',
+            type: 'number',
+        }
     ]
 },
 
@@ -120,7 +125,7 @@ registerPlugin({
         decodeURI(params.players).split(';').forEach((team, n) => {
             team.split(',').forEach((player) => {
                 let clnt = backend.getClientByUID(player);
-                let group = backend.getChannelGroupByID(12);
+                let group = backend.getChannelGroupByID(config.chGroupID);
                 if (Boolean(clnt)) {
                     channels[n].setChannelGroup(clnt, group);
                     clnt.moveTo(channels[n]);
