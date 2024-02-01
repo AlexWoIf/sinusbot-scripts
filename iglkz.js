@@ -120,9 +120,9 @@ registerPlugin({
         decodeURI(params.players).split(';').forEach((team, n) => {
             team.split(',').forEach((player) => {
                 let clnt = backend.getClientByUID(player);
-                let group = backend.getChannelGroupByID(groupID);
+                let group = backend.getChannelGroupByID(6);
                 if (Boolean(clnt)) {
-                    channels[n].setChannelGroup(clnt, 6);
+                    channels[n].setChannelGroup(clnt, group);
                     clnt.moveTo(channels[n]);
                 }
             });
