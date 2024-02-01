@@ -81,7 +81,7 @@ registerPlugin({
             return;
         }
 
-        channelNames = params.channelNames.splt(',').forEach( (channelName, n) => {
+        channelNames = params.channelNames.split(',').forEach( (channelName, n) => {
             while (backend.getChannelByName(channelName)) {
                 channelName += '!';
             }
